@@ -11,6 +11,8 @@ import cors from 'cors';
 
 import { env } from './config/env';
 import { healthRouter } from './modules/health/health.routes';
+import { productRouter } from './modules/products/product.routes';
+import { categoryRouter } from './modules/categories/category.routes';
 import { notFound } from './middlewares/notFound';
 import { errorHandler } from './middlewares/errorHandler';
 
@@ -23,6 +25,8 @@ export function createApp() {
 
   // Feature routes (more added as we build modules).
   app.use('/api/health', healthRouter);
+  app.use('/api/products', productRouter);
+  app.use('/api/categories', categoryRouter);
 
   // Fallbacks — must come after all routes.
   app.use(notFound);
