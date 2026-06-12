@@ -249,6 +249,18 @@ async function seedProducts(
 async function main(): Promise<void> {
   console.log('🌱 Seeding database...');
 
+  // Idempotent guard: skip if the catalog is already populated, so this is safe
+  // to run on every deploy without wiping existing orders. Set FORCE_SEED=true
+  // to re-seed anyway (this clears and reloads everything).
+  const force = process.env.FORCE_SEED === 'true';
+  const existingProducts = await prisma.product.count();
+  if (!force && existingProducts > 0) {
+    console.log(
+      `   Database already has ${existingProducts} products — skipping (set FORCE_SEED=true to re-seed).`,
+    );
+    return;
+  }
+
   const products = await fetchProducts();
   console.log(`   Fetched ${products.length} products from DummyJSON.`);
 

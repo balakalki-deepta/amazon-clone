@@ -20,9 +20,11 @@ services:
     runtime: node
     plan: free
     rootDir: backend
-    # install (incl. devDeps for tsc) → generate Prisma client → compile → migrate.
+    # install (incl. devDeps for tsc) → generate Prisma client → compile →
+    # migrate → seed. The seed is idempotent (skips if products already exist),
+    # so it only fills the catalog on the first deploy and won't wipe later data.
     # --include=dev is required because NODE_ENV=production otherwise skips devDeps.
-    buildCommand: npm install --include=dev && npx prisma generate && npm run build && npx prisma migrate deploy
+    buildCommand: npm install --include=dev && npx prisma generate && npm run build && npx prisma migrate deploy && npm run db:seed
     startCommand: npm run start
     healthCheckPath: /api/health
     envVars:

@@ -31,17 +31,19 @@ root. One account, one connected repo, three free pieces:
    your tables are created automatically. (The frontend may show the wrong API
    URL for now — we fix that in Step 3.)
 
-## Step 2 — Seed the catalog (one time)
+## Step 2 — Seed the catalog (automatic)
 
-The database starts empty. To load the 194 products:
+Nothing to do — the API build runs the seed for you. It's **idempotent**: it only
+loads the 194 products when the database is empty, so later deploys won't wipe
+your orders. (No paid Shell needed.)
 
-1. Open the **amazon-clone-api** service → **Shell** tab.
-2. Run:
+**To re-seed manually** (free, from your own machine):
+
+1. Render Dashboard → **amazon-clone-db** → copy the **External Database URL**.
+2. From the `backend/` folder, run it once with a force flag:
    ```bash
-   npm run db:seed
+   DATABASE_URL="<external-url>?sslmode=require" FORCE_SEED=true npm run db:seed
    ```
-   This pulls the catalog from DummyJSON and fills the database. (Only needed
-   once; re-running it re-loads the same data.)
 
 ## Step 3 — Connect the two URLs
 
