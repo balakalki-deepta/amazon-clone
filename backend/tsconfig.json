@@ -9,8 +9,9 @@
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true,
+    "rootDir": "src",
     "outDir": "dist",
     "sourceMap": true
   },
-  "include": ["src", "prisma"]
+  "include": ["src"]
 }

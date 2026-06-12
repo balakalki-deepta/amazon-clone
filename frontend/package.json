@@ -4,6 +4,9 @@
   "private": true,
   "type": "module",
   "description": "React + Vite SPA for the Amazon Clone",
+  "engines": {
+    "node": ">=20"
+  },
   "scripts": {
     "dev": "vite",
     "build": "tsc --noEmit && vite build",
