@@ -66,9 +66,10 @@ Designed and migrated (`init` migration). Tables:
 - ✅ List items, update quantity (stepper), remove item
 - ✅ Cart summary: subtotal + item count; empty state; sticky checkout box
 
-## Phase 10 — Order API  ⬜
-- `POST /api/orders` (create from cart + shipping address)
-- `GET /api/orders/:id`
+## Phase 10 — Order API  ✅
+- ✅ `POST /api/orders`: server-priced, stock-validated, snapshots product +
+  address, decrements stock, generates order number — all in one transaction
+- ✅ `GET /api/orders/:orderNumber` (confirmation lookup; 404 if missing)
 
 ## Phase 11 — Checkout & Confirmation  ⬜  (Core Feature 4)
 - Checkout page: shipping address form
