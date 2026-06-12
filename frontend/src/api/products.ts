@@ -4,7 +4,7 @@
  */
 
 import { apiClient } from './client';
-import type { ProductListResult, ProductQueryParams } from '../types';
+import type { ProductDetail, ProductListResult, ProductQueryParams } from '../types';
 
 interface Envelope<T> {
   data: T;
@@ -12,5 +12,10 @@ interface Envelope<T> {
 
 export async function getProducts(params: ProductQueryParams): Promise<ProductListResult> {
   const response = await apiClient.get<Envelope<ProductListResult>>('/products', { params });
+  return response.data.data;
+}
+
+export async function getProductBySlug(slug: string): Promise<ProductDetail> {
+  const response = await apiClient.get<Envelope<ProductDetail>>(`/products/${slug}`);
   return response.data.data;
 }

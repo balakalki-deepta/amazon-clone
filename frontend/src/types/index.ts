@@ -22,6 +22,28 @@ export interface Product {
   category: ProductCategory;
 }
 
+export interface ProductImage {
+  id: number;
+  url: string;
+  position: number;
+  altText: string | null;
+}
+
+export interface ProductSpecification {
+  id: number;
+  key: string;
+  value: string;
+  position: number;
+}
+
+/** Full product for the detail page (extends the list item). */
+export interface ProductDetail extends Product {
+  description: string | null;
+  sku: string | null;
+  images: ProductImage[];
+  specifications: ProductSpecification[];
+}
+
 export interface Category {
   id: number;
   name: string;

@@ -1,6 +1,7 @@
 import { Routes, Route } from 'react-router-dom';
 import Layout from './layout/Layout';
 import ProductListingPage from './pages/ProductListingPage';
+import ProductDetailPage from './pages/ProductDetailPage';
 import NotFoundPage from './pages/NotFoundPage';
 
 /**
@@ -12,6 +13,7 @@ export default function App() {
     <Routes>
       <Route element={<Layout />}>
         <Route path="/" element={<ProductListingPage />} />
+        <Route path="/product/:slug" element={<ProductDetailPage />} />
         <Route path="*" element={<NotFoundPage />} />
       </Route>
     </Routes>
