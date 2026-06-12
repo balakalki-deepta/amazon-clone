@@ -1,0 +1,96 @@
+.page {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 16px;
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: 1fr 300px;
+  gap: 16px;
+  align-items: start;
+}
+
+/* ---- Items panel ---- */
+.items {
+  background: #fff;
+  border-radius: 8px;
+  padding: 20px;
+}
+.heading {
+  font-size: 28px;
+  font-weight: 400;
+  margin: 0;
+}
+.priceHeader {
+  text-align: right;
+  color: var(--text-muted);
+  font-size: 13px;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 8px;
+}
+.subtotalRow {
+  text-align: right;
+  font-size: 18px;
+  padding-top: 16px;
+}
+.subtotalRow strong {
+  font-weight: 700;
+}
+
+/* ---- Summary box ---- */
+.summary {
+  background: #fff;
+  border-radius: 8px;
+  padding: 18px;
+  position: sticky;
+  top: 120px;
+}
+.summarySubtotal {
+  font-size: 18px;
+  margin-bottom: 14px;
+}
+.summarySubtotal strong {
+  font-weight: 700;
+}
+.checkoutButton {
+  display: block;
+  text-align: center;
+  background: var(--amazon-yellow);
+  border: 1px solid #fcd200;
+  border-radius: 20px;
+  padding: 9px;
+  font-size: 14px;
+  color: var(--text);
+}
+.checkoutButton:hover {
+  background: var(--amazon-yellow-hover);
+}
+
+/* ---- Empty state ---- */
+.empty {
+  background: #fff;
+  border-radius: 8px;
+  padding: 30px;
+}
+.emptyHeading {
+  font-size: 28px;
+  font-weight: 400;
+  margin: 0 0 10px;
+}
+.shopLink {
+  color: var(--amazon-link);
+}
+.shopLink:hover {
+  color: var(--amazon-link-hover);
+  text-decoration: underline;
+}
+
+@media (max-width: 800px) {
+  .layout {
+    grid-template-columns: 1fr;
+  }
+  .summary {
+    position: static;
+  }
+}

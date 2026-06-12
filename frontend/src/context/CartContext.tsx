@@ -22,7 +22,10 @@ export interface CartItem {
 interface CartContextValue {
   items: CartItem[];
   totalQuantity: number;
+  subtotal: number;
   addItem: (product: Product, quantity?: number) => void;
+  updateQuantity: (productId: number, quantity: number) => void;
+  removeItem: (productId: number) => void;
 }
 
 const CartContext = createContext<CartContextValue | undefined>(undefined);
@@ -69,10 +72,29 @@ export function CartProvider({ children }: { children: ReactNode }) {
     });
   }
 
+  /** Set an item's quantity; a quantity of 0 or less removes it. */
+  function updateQuantity(productId: number, quantity: number) {
+    setItems((current) => {
+      if (quantity <= 0) {
+        return current.filter((item) => item.productId !== productId);
+      }
+      return current.map((item) =>
+        item.productId === productId ? { ...item, quantity } : item,
+      );
+    });
+  }
+
+  function removeItem(productId: number) {
+    setItems((current) => current.filter((item) => item.productId !== productId));
+  }
+
   const totalQuantity = items.reduce((sum, item) => sum + item.quantity, 0);
+  const subtotal = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
   return (
-    <CartContext.Provider value={{ items, totalQuantity, addItem }}>
+    <CartContext.Provider
+      value={{ items, totalQuantity, subtotal, addItem, updateQuantity, removeItem }}
+    >
       {children}
     </CartContext.Provider>
   );

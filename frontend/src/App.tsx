@@ -2,6 +2,7 @@ import { Routes, Route } from 'react-router-dom';
 import Layout from './layout/Layout';
 import ProductListingPage from './pages/ProductListingPage';
 import ProductDetailPage from './pages/ProductDetailPage';
+import CartPage from './pages/CartPage';
 import NotFoundPage from './pages/NotFoundPage';
 
 /**
@@ -14,6 +15,7 @@ export default function App() {
       <Route element={<Layout />}>
         <Route path="/" element={<ProductListingPage />} />
         <Route path="/product/:slug" element={<ProductDetailPage />} />
+        <Route path="/cart" element={<CartPage />} />
         <Route path="*" element={<NotFoundPage />} />
       </Route>
     </Routes>
