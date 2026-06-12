@@ -34,10 +34,10 @@ Designed and migrated (`init` migration). Tables:
 - Seeds the default user (`demo@amazonclone.dev`)
 - Idempotent + transactional (`npm run db:seed`)
 
-## Phase 4 — Products API  ⬜
-- `GET /api/products` (list, with `?search=` and `?category=` filters)
-- `GET /api/categories`
-- `GET /api/products/:id` (detail incl. images & specs)
+## Phase 4 — Products API  🟨
+- ✅ `GET /api/products` (list, with `?search=`, `?category=`, `?page=`, `?limit=`)
+- ✅ `GET /api/categories` (with product counts)
+- ⬜ `GET /api/products/:slug` (detail incl. images & specs) — with Phase 7
 
 ## Phase 5 — Frontend foundation  ⬜
 - Vite + React Router app boots
