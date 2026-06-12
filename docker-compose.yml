@@ -1,0 +1,26 @@
+# Runs PostgreSQL locally so no system install is needed.
+# Start with:  docker compose up -d
+# Stop with:   docker compose down   (add -v to also wipe the data volume)
+
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: amazon_clone_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: amazon
+      POSTGRES_PASSWORD: amazon
+      POSTGRES_DB: amazon_clone
+    ports:
+      # host:container — backend connects to localhost:5432
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U amazon -d amazon_clone"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  pgdata:
