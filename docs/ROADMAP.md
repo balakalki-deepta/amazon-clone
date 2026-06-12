@@ -71,10 +71,10 @@ Designed and migrated (`init` migration). Tables:
   address, decrements stock, generates order number — all in one transaction
 - ✅ `GET /api/orders/:orderNumber` (confirmation lookup; 404 if missing)
 
-## Phase 11 — Checkout & Confirmation  ⬜  (Core Feature 4)
-- Checkout page: shipping address form
-- Order summary review → place order
-- Order confirmation page showing the order ID
+## Phase 11 — Checkout & Confirmation  ✅  (Core Feature 4)
+- ✅ Checkout page: shipping address form + order summary review
+- ✅ Place order → creates order on server, clears cart, redirects
+- ✅ Confirmation page (`/order/:orderNumber`) shows the order ID + details
 
 ## Phase 12 — Polish & ship  ⬜
 - Responsive pass (mobile/tablet/desktop)
