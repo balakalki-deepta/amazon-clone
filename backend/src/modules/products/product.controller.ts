@@ -13,3 +13,9 @@ export async function listProducts(req: Request, res: Response): Promise<void> {
   const result = await productService.listProducts(query);
   sendSuccess(res, result);
 }
+
+export async function getProduct(req: Request, res: Response): Promise<void> {
+  const slug = String(req.params.slug);
+  const product = await productService.getProductBySlug(slug);
+  sendSuccess(res, product);
+}

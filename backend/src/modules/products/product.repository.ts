@@ -42,3 +42,15 @@ export async function findProducts({ skip, take, search, category }: FindProduct
 
   return { products, total };
 }
+
+/** Fetch a single product (with category, ordered images, and ordered specs). */
+export async function findProductBySlug(slug: string) {
+  return prisma.product.findUnique({
+    where: { slug },
+    include: {
+      category: true,
+      images: { orderBy: { position: 'asc' } },
+      specifications: { orderBy: { position: 'asc' } },
+    },
+  });
+}

@@ -7,8 +7,15 @@
  */
 
 import * as productRepository from './product.repository';
+import { ApiError } from '../../utils/ApiError';
 import type { ProductQuery } from './product.schema';
-import type { ProductListItem, ProductListResult, ProductWithCategory } from './product.types';
+import type {
+  ProductDetail,
+  ProductDetailRow,
+  ProductListItem,
+  ProductListResult,
+  ProductWithCategory,
+} from './product.types';
 
 /** Map a DB row (with Decimal fields) to the API-facing list item. */
 function toProductListItem(product: ProductWithCategory): ProductListItem {
@@ -27,6 +34,27 @@ function toProductListItem(product: ProductWithCategory): ProductListItem {
       name: product.category.name,
       slug: product.category.slug,
     },
+  };
+}
+
+/** Map a full DB row (with images + specs) to the detail API shape. */
+function toProductDetail(product: ProductDetailRow): ProductDetail {
+  return {
+    ...toProductListItem(product),
+    description: product.description,
+    sku: product.sku,
+    images: product.images.map((image) => ({
+      id: image.id,
+      url: image.url,
+      position: image.position,
+      altText: image.altText,
+    })),
+    specifications: product.specifications.map((spec) => ({
+      id: spec.id,
+      key: spec.specKey,
+      value: spec.specValue,
+      position: spec.position,
+    })),
   };
 }
 
@@ -50,4 +78,12 @@ export async function listProducts(query: ProductQuery): Promise<ProductListResu
       totalPages: Math.ceil(total / limit),
     },
   };
+}
+
+export async function getProductBySlug(slug: string): Promise<ProductDetail> {
+  const product = await productRepository.findProductBySlug(slug);
+  if (!product) {
+    throw ApiError.notFound(`Product not found: ${slug}`);
+  }
+  return toProductDetail(product);
 }
