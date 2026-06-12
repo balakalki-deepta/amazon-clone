@@ -86,44 +86,115 @@ export default function CheckoutPage() {
           <h1 className={styles.heading}>Shipping address</h1>
 
           <div className={styles.field}>
-            <label className={styles.label} htmlFor="fullName">Full name</label>
-            <input id="fullName" name="fullName" className={styles.input} value={address.fullName} onChange={handleChange} required />
+            <label className={styles.label} htmlFor="fullName">
+              Full name
+            </label>
+            <input
+              id="fullName"
+              name="fullName"
+              className={styles.input}
+              value={address.fullName}
+              onChange={handleChange}
+              required
+            />
           </div>
 
           <div className={styles.field}>
-            <label className={styles.label} htmlFor="phone">Phone number</label>
-            <input id="phone" name="phone" className={styles.input} value={address.phone} onChange={handleChange} required />
+            <label className={styles.label} htmlFor="phone">
+              Phone number
+            </label>
+            <input
+              id="phone"
+              name="phone"
+              className={styles.input}
+              value={address.phone}
+              onChange={handleChange}
+              required
+            />
           </div>
 
           <div className={styles.field}>
-            <label className={styles.label} htmlFor="line1">Address line 1</label>
-            <input id="line1" name="line1" className={styles.input} value={address.line1} onChange={handleChange} required />
+            <label className={styles.label} htmlFor="line1">
+              Address line 1
+            </label>
+            <input
+              id="line1"
+              name="line1"
+              className={styles.input}
+              value={address.line1}
+              onChange={handleChange}
+              required
+            />
           </div>
 
           <div className={styles.field}>
-            <label className={styles.label} htmlFor="line2">Address line 2 (optional)</label>
-            <input id="line2" name="line2" className={styles.input} value={address.line2} onChange={handleChange} />
+            <label className={styles.label} htmlFor="line2">
+              Address line 2 (optional)
+            </label>
+            <input
+              id="line2"
+              name="line2"
+              className={styles.input}
+              value={address.line2}
+              onChange={handleChange}
+            />
           </div>
 
           <div className={styles.row}>
             <div className={styles.field}>
-              <label className={styles.label} htmlFor="city">City</label>
-              <input id="city" name="city" className={styles.input} value={address.city} onChange={handleChange} required />
+              <label className={styles.label} htmlFor="city">
+                City
+              </label>
+              <input
+                id="city"
+                name="city"
+                className={styles.input}
+                value={address.city}
+                onChange={handleChange}
+                required
+              />
             </div>
             <div className={styles.field}>
-              <label className={styles.label} htmlFor="state">State</label>
-              <input id="state" name="state" className={styles.input} value={address.state} onChange={handleChange} required />
+              <label className={styles.label} htmlFor="state">
+                State
+              </label>
+              <input
+                id="state"
+                name="state"
+                className={styles.input}
+                value={address.state}
+                onChange={handleChange}
+                required
+              />
             </div>
           </div>
 
           <div className={styles.row}>
             <div className={styles.field}>
-              <label className={styles.label} htmlFor="postalCode">Postal code</label>
-              <input id="postalCode" name="postalCode" className={styles.input} value={address.postalCode} onChange={handleChange} required />
+              <label className={styles.label} htmlFor="postalCode">
+                Postal code
+              </label>
+              <input
+                id="postalCode"
+                name="postalCode"
+                className={styles.input}
+                value={address.postalCode}
+                onChange={handleChange}
+                required
+              />
             </div>
             <div className={styles.field}>
-              <label className={styles.label} htmlFor="country">Country</label>
-              <input id="country" name="country" className={styles.input} value={address.country} onChange={handleChange} required />
+              <label className={styles.label} htmlFor="country">
+                Country
+              </label>
+              <input
+                id="country"
+                name="country"
+                className={styles.input}
+                value={address.country}
+                onChange={handleChange}
+                required
+              />
             </div>
           </div>
         </section>
@@ -143,7 +214,9 @@ export default function CheckoutPage() {
           </ul>
 
           <div className={styles.summaryRow}>
-            <span>Subtotal ({totalQuantity} {itemNoun})</span>
+            <span>
+              Subtotal ({totalQuantity} {itemNoun})
+            </span>
             <span>{formatPrice(subtotal)}</span>
           </div>
           <div className={styles.summaryTotal}>

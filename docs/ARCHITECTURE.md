@@ -13,7 +13,7 @@ Browser (React SPA)  ──HTTP/JSON──>  Express REST API  ──SQL──> 
   and client state. It never talks to the database directly; it only calls the
   backend's REST API.
 - **backend/** — A Node + Express + TypeScript REST API. It owns all business
-  logic and is the *only* thing that talks to the database.
+  logic and is the _only_ thing that talks to the database.
 - **PostgreSQL** — Runs in Docker (`docker-compose.yml`). Accessed through the
   Prisma ORM so our queries are type-safe.
 
@@ -23,13 +23,13 @@ data flow explicit and easy to reason about: a request always travels
 
 ## 2. Why this stack
 
-| Layer    | Choice                    | Reason |
-|----------|---------------------------|--------|
-| Frontend | React 18 + Vite + TS      | True SPA as the assignment asks; fast dev server; same language as backend. |
-| Routing  | React Router              | Client-side routing for `/`, `/product/:id`, `/cart`, `/checkout`. |
-| Backend  | Express + TypeScript      | Minimal, explicit, easy to read top-to-bottom. |
-| ORM      | Prisma                    | Type-safe DB access; schema is the single source of truth. |
-| Database | PostgreSQL 16             | Robust relational DB; strong support for our relationships. |
+| Layer    | Choice               | Reason                                                                      |
+| -------- | -------------------- | --------------------------------------------------------------------------- |
+| Frontend | React 18 + Vite + TS | True SPA as the assignment asks; fast dev server; same language as backend. |
+| Routing  | React Router         | Client-side routing for `/`, `/product/:id`, `/cart`, `/checkout`.          |
+| Backend  | Express + TypeScript | Minimal, explicit, easy to read top-to-bottom.                              |
+| ORM      | Prisma               | Type-safe DB access; schema is the single source of truth.                  |
+| Database | PostgreSQL 16        | Robust relational DB; strong support for our relationships.                 |
 
 ## 3. Backend architecture (layered + modular)
 

@@ -7,20 +7,21 @@ file looks like it was written by one person, and every change is easy to review
 
 Format: `type(scope): short summary in present tense`
 
-| Type       | When to use it |
-|------------|----------------|
-| `feat`     | A new feature or capability for the user. |
-| `fix`      | A bug fix. |
-| `refactor` | Code change that neither fixes a bug nor adds a feature. |
+| Type       | When to use it                                                |
+| ---------- | ------------------------------------------------------------- |
+| `feat`     | A new feature or capability for the user.                     |
+| `fix`      | A bug fix.                                                    |
+| `refactor` | Code change that neither fixes a bug nor adds a feature.      |
 | `chore`    | Tooling, config, deps, scaffolding (no app behaviour change). |
-| `docs`     | Documentation only. |
-| `style`    | Formatting only (whitespace, semicolons) — no logic change. |
-| `test`     | Adding or fixing tests. |
-| `perf`     | A performance improvement. |
+| `docs`     | Documentation only.                                           |
+| `style`    | Formatting only (whitespace, semicolons) — no logic change.   |
+| `test`     | Adding or fixing tests.                                       |
+| `perf`     | A performance improvement.                                    |
 
 **Scope** is the area touched, e.g. `products`, `cart`, `backend`, `frontend`, `db`.
 
 Examples:
+
 ```
 chore: initialize project structure and conventions
 feat(products): add product listing endpoint
@@ -31,6 +32,7 @@ docs: add database schema diagram
 ```
 
 Rules:
+
 - One logical change per commit. Small, focused commits we can each understand.
 - Summary in imperative mood ("add", not "added"), lower-case, no trailing period.
 - Keep the summary under ~72 characters.
@@ -44,15 +46,15 @@ Rules:
 
 ## 3. File & folder naming
 
-| Thing                         | Convention      | Example |
-|-------------------------------|-----------------|---------|
-| Folders                       | kebab-case      | `product-detail/` |
-| Backend module files          | dot-segmented   | `product.service.ts` |
-| React components               | PascalCase      | `ProductCard.tsx` |
-| Hooks                          | camelCase, `use`| `useCart.ts` |
-| Non-component TS files         | camelCase       | `formatPrice.ts` |
-| Types/interfaces              | PascalCase      | `Product`, `CartItem` |
-| Constants                      | UPPER_SNAKE     | `MAX_QUANTITY` |
+| Thing                  | Convention       | Example               |
+| ---------------------- | ---------------- | --------------------- |
+| Folders                | kebab-case       | `product-detail/`     |
+| Backend module files   | dot-segmented    | `product.service.ts`  |
+| React components       | PascalCase       | `ProductCard.tsx`     |
+| Hooks                  | camelCase, `use` | `useCart.ts`          |
+| Non-component TS files | camelCase        | `formatPrice.ts`      |
+| Types/interfaces       | PascalCase       | `Product`, `CartItem` |
+| Constants              | UPPER_SNAKE      | `MAX_QUANTITY`        |
 
 ## 4. Code style
 

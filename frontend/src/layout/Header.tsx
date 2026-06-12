@@ -69,11 +69,21 @@ export default function Header() {
         <Link to="/" className={styles.subnavLink}>
           ☰ All
         </Link>
-        <Link to="/" className={styles.subnavLink}>Today's Deals</Link>
-        <Link to="/" className={styles.subnavLink}>Customer Service</Link>
-        <Link to="/" className={styles.subnavLink}>Registry</Link>
-        <Link to="/" className={styles.subnavLink}>Gift Cards</Link>
-        <Link to="/" className={styles.subnavLink}>Sell</Link>
+        <Link to="/" className={styles.subnavLink}>
+          Today's Deals
+        </Link>
+        <Link to="/" className={styles.subnavLink}>
+          Customer Service
+        </Link>
+        <Link to="/" className={styles.subnavLink}>
+          Registry
+        </Link>
+        <Link to="/" className={styles.subnavLink}>
+          Gift Cards
+        </Link>
+        <Link to="/" className={styles.subnavLink}>
+          Sell
+        </Link>
       </nav>
     </header>
   );

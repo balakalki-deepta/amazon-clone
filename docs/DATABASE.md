@@ -1,7 +1,7 @@
 # Database Design (PostgreSQL)
 
-> Design reasoning only — no Prisma code yet. This document explains *what* tables
-> exist, *why* they exist, how they relate, and the tradeoffs behind each choice.
+> Design reasoning only — no Prisma code yet. This document explains _what_ tables
+> exist, _why_ they exist, how they relate, and the tradeoffs behind each choice.
 > The Prisma schema in Phase 2 will be a direct translation of this.
 
 ---
@@ -9,7 +9,7 @@
 ## 1. Design principles we follow
 
 1. **Normalize to 3NF for catalog data**, then **deliberately denormalize for
-   historical records** (orders). A cart shows *live* product data; an order must
+   historical records** (orders). A cart shows _live_ product data; an order must
    freeze the data as it was at purchase time. This split is the single most
    important real-world idea in the schema.
 2. **One concern per table.** Repeating/variable data (images, specs) lives in its
@@ -26,33 +26,35 @@
 ## 2. The tables (and why each exists)
 
 ### `users`
+
 **Why:** Carts, orders, and addresses all belong to someone. The assignment says
 "assume a default user is logged in," so we seed exactly one user and use its id.
 Modeling it as a real table (instead of hardcoding) means auth can be added later
 with zero schema reshaping.
 
-| Column      | Type           | Notes |
-|-------------|----------------|-------|
-| id          | BIGINT (PK, identity) | surrogate key |
-| email       | CITEXT, UNIQUE, NOT NULL | case-insensitive unique |
-| name        | TEXT, NOT NULL | |
-| created_at  | TIMESTAMPTZ, default now() | |
-| updated_at  | TIMESTAMPTZ, default now() | |
+| Column     | Type                       | Notes                   |
+| ---------- | -------------------------- | ----------------------- |
+| id         | BIGINT (PK, identity)      | surrogate key           |
+| email      | CITEXT, UNIQUE, NOT NULL   | case-insensitive unique |
+| name       | TEXT, NOT NULL             |                         |
+| created_at | TIMESTAMPTZ, default now() |                         |
+| updated_at | TIMESTAMPTZ, default now() |                         |
 
 ---
 
 ### `categories`
+
 **Why:** "Filter products by category" is a core feature, and categories are
 shared across many products — so they get their own table (avoids repeating the
 category name on every product row, and lets us rename a category in one place).
 
-| Column      | Type            | Notes |
-|-------------|-----------------|-------|
-| id          | BIGINT (PK)     | |
-| name        | TEXT, NOT NULL  | "Beauty" |
-| slug        | TEXT, UNIQUE, NOT NULL | URL-safe "beauty"; used in `?category=` filter |
-| parent_id   | BIGINT, FK → categories.id, NULLABLE | **self-reference** for sub-categories (extensibility) |
-| created_at  | TIMESTAMPTZ     | |
+| Column     | Type                                 | Notes                                                 |
+| ---------- | ------------------------------------ | ----------------------------------------------------- |
+| id         | BIGINT (PK)                          |                                                       |
+| name       | TEXT, NOT NULL                       | "Beauty"                                              |
+| slug       | TEXT, UNIQUE, NOT NULL               | URL-safe "beauty"; used in `?category=` filter        |
+| parent_id  | BIGINT, FK → categories.id, NULLABLE | **self-reference** for sub-categories (extensibility) |
+| created_at | TIMESTAMPTZ                          |                                                       |
 
 **Relationship:** one category → many products (1:N). Self-referencing
 `parent_id` supports a category tree later without a new table.
@@ -60,26 +62,27 @@ category name on every product row, and lets us rename a category in one place).
 ---
 
 ### `products`
+
 **Why:** The heart of the catalog. One row = one sellable product. Fields that are
 1:1 with a product live here; anything repeating (images) or variable (specs) is
 split into child tables.
 
-| Column              | Type             | Notes |
-|---------------------|------------------|-------|
-| id                  | BIGINT (PK)      | |
-| title               | TEXT, NOT NULL   | product name |
-| slug                | TEXT, UNIQUE, NOT NULL | for clean detail URLs |
-| description         | TEXT             | |
-| brand               | TEXT, NULLABLE   | not every product has a brand in source data |
-| sku                 | TEXT, UNIQUE     | stock-keeping unit |
-| category_id         | BIGINT, FK → categories.id, NOT NULL | |
-| price               | NUMERIC(12,2), NOT NULL, CHECK ≥ 0 | base price |
-| discount_percentage | NUMERIC(5,2), default 0, CHECK 0–100 | drives the "deal" price in UI |
-| stock               | INTEGER, NOT NULL, default 0, CHECK ≥ 0 | drives "in stock / out of stock" |
-| rating              | NUMERIC(3,2), CHECK 0–5 | average rating (denormalized snapshot) |
-| thumbnail_url       | TEXT             | card/grid image |
-| created_at          | TIMESTAMPTZ      | |
-| updated_at          | TIMESTAMPTZ      | |
+| Column              | Type                                    | Notes                                        |
+| ------------------- | --------------------------------------- | -------------------------------------------- |
+| id                  | BIGINT (PK)                             |                                              |
+| title               | TEXT, NOT NULL                          | product name                                 |
+| slug                | TEXT, UNIQUE, NOT NULL                  | for clean detail URLs                        |
+| description         | TEXT                                    |                                              |
+| brand               | TEXT, NULLABLE                          | not every product has a brand in source data |
+| sku                 | TEXT, UNIQUE                            | stock-keeping unit                           |
+| category_id         | BIGINT, FK → categories.id, NOT NULL    |                                              |
+| price               | NUMERIC(12,2), NOT NULL, CHECK ≥ 0      | base price                                   |
+| discount_percentage | NUMERIC(5,2), default 0, CHECK 0–100    | drives the "deal" price in UI                |
+| stock               | INTEGER, NOT NULL, default 0, CHECK ≥ 0 | drives "in stock / out of stock"             |
+| rating              | NUMERIC(3,2), CHECK 0–5                 | average rating (denormalized snapshot)       |
+| thumbnail_url       | TEXT                                    | card/grid image                              |
+| created_at          | TIMESTAMPTZ                             |                                              |
+| updated_at          | TIMESTAMPTZ                             |                                              |
 
 **Note on `rating`:** it's stored on the product as a cached average. When we add a
 real `reviews` table (bonus), this becomes a maintained aggregate. For now it's
@@ -88,23 +91,25 @@ seeded directly from the source.
 ---
 
 ### `product_images`
+
 **Why:** The Product Detail Page needs an **image carousel** = multiple images per
 product. That's a classic one-to-many, so a child table — never a comma-separated
 string (which can't be indexed, ordered, or validated).
 
-| Column      | Type           | Notes |
-|-------------|----------------|-------|
-| id          | BIGINT (PK)    | |
-| product_id  | BIGINT, FK → products.id, NOT NULL, ON DELETE CASCADE | delete product ⇒ delete its images |
-| url         | TEXT, NOT NULL | |
-| position    | SMALLINT, NOT NULL, default 0 | carousel order |
-| alt_text    | TEXT, NULLABLE | accessibility |
+| Column     | Type                                                  | Notes                              |
+| ---------- | ----------------------------------------------------- | ---------------------------------- |
+| id         | BIGINT (PK)                                           |                                    |
+| product_id | BIGINT, FK → products.id, NOT NULL, ON DELETE CASCADE | delete product ⇒ delete its images |
+| url        | TEXT, NOT NULL                                        |                                    |
+| position   | SMALLINT, NOT NULL, default 0                         | carousel order                     |
+| alt_text   | TEXT, NULLABLE                                        | accessibility                      |
 
 **Relationship:** one product → many images (1:N).
 
 ---
 
 ### `product_specifications`
+
 **Why:** "Product description and specifications" is required, and specs vary
 wildly between products (a laptop's specs ≠ a perfume's). Two valid approaches:
 
@@ -114,66 +119,69 @@ wildly between products (a laptop's specs ≠ a perfume's). Two valid approaches
 - **(B) a `JSONB` column** on `products`: simpler, but weaker validation and
   harder to query/aggregate per-spec.
 
-| Column      | Type           | Notes |
-|-------------|----------------|-------|
-| id          | BIGINT (PK)    | |
-| product_id  | BIGINT, FK → products.id, NOT NULL, ON DELETE CASCADE | |
-| spec_key    | TEXT, NOT NULL | "Weight", "Warranty" |
-| spec_value  | TEXT, NOT NULL | "4 kg", "1 week warranty" |
-| position    | SMALLINT, default 0 | display order |
+| Column     | Type                                                  | Notes                     |
+| ---------- | ----------------------------------------------------- | ------------------------- |
+| id         | BIGINT (PK)                                           |                           |
+| product_id | BIGINT, FK → products.id, NOT NULL, ON DELETE CASCADE |                           |
+| spec_key   | TEXT, NOT NULL                                        | "Weight", "Warranty"      |
+| spec_value | TEXT, NOT NULL                                        | "4 kg", "1 week warranty" |
+| position   | SMALLINT, default 0                                   | display order             |
 
 (Tradeoff discussed in §7.)
 
 ---
 
 ### `addresses`
+
 **Why:** Checkout needs a shipping address. Addresses belong to a user and a user
 may have several, so they're their own table (reusable across orders).
 
-| Column       | Type            | Notes |
-|--------------|-----------------|-------|
-| id           | BIGINT (PK)     | |
-| user_id      | BIGINT, FK → users.id, NOT NULL, ON DELETE CASCADE | |
-| full_name    | TEXT, NOT NULL  | |
-| phone        | TEXT, NOT NULL  | |
-| line1        | TEXT, NOT NULL  | |
-| line2        | TEXT, NULLABLE  | |
-| city         | TEXT, NOT NULL  | |
-| state        | TEXT, NOT NULL  | |
-| postal_code  | TEXT, NOT NULL  | text, not int (leading zeros, non-numeric codes) |
-| country      | TEXT, NOT NULL  | |
-| is_default   | BOOLEAN, default false | |
-| created_at   | TIMESTAMPTZ     | |
+| Column      | Type                                               | Notes                                            |
+| ----------- | -------------------------------------------------- | ------------------------------------------------ |
+| id          | BIGINT (PK)                                        |                                                  |
+| user_id     | BIGINT, FK → users.id, NOT NULL, ON DELETE CASCADE |                                                  |
+| full_name   | TEXT, NOT NULL                                     |                                                  |
+| phone       | TEXT, NOT NULL                                     |                                                  |
+| line1       | TEXT, NOT NULL                                     |                                                  |
+| line2       | TEXT, NULLABLE                                     |                                                  |
+| city        | TEXT, NOT NULL                                     |                                                  |
+| state       | TEXT, NOT NULL                                     |                                                  |
+| postal_code | TEXT, NOT NULL                                     | text, not int (leading zeros, non-numeric codes) |
+| country     | TEXT, NOT NULL                                     |                                                  |
+| is_default  | BOOLEAN, default false                             |                                                  |
+| created_at  | TIMESTAMPTZ                                        |                                                  |
 
 ---
 
 ### `carts`
+
 **Why:** A cart is a container that survives across requests. One **active** cart
 per user (enforced with a partial unique index). Modeling it as a row (not just
 client state) lets the cart persist server-side and become an order atomically.
 
-| Column      | Type           | Notes |
-|-------------|----------------|-------|
-| id          | BIGINT (PK)    | |
-| user_id     | BIGINT, FK → users.id, NOT NULL, ON DELETE CASCADE | |
-| status      | cart_status ENUM, default 'ACTIVE' | ACTIVE / CONVERTED / ABANDONED |
-| created_at  | TIMESTAMPTZ    | |
-| updated_at  | TIMESTAMPTZ    | |
+| Column     | Type                                               | Notes                          |
+| ---------- | -------------------------------------------------- | ------------------------------ |
+| id         | BIGINT (PK)                                        |                                |
+| user_id    | BIGINT, FK → users.id, NOT NULL, ON DELETE CASCADE |                                |
+| status     | cart_status ENUM, default 'ACTIVE'                 | ACTIVE / CONVERTED / ABANDONED |
+| created_at | TIMESTAMPTZ                                        |                                |
+| updated_at | TIMESTAMPTZ                                        |                                |
 
 ---
 
 ### `cart_items`
+
 **Why:** The lines inside a cart. A join table between carts and products **with a
-quantity payload**. Cart items reference *live* products (no price snapshot) — the
+quantity payload**. Cart items reference _live_ products (no price snapshot) — the
 cart should always reflect the current price.
 
-| Column      | Type           | Notes |
-|-------------|----------------|-------|
-| id          | BIGINT (PK)    | |
-| cart_id     | BIGINT, FK → carts.id, NOT NULL, ON DELETE CASCADE | |
-| product_id  | BIGINT, FK → products.id, NOT NULL, ON DELETE CASCADE | |
-| quantity    | INTEGER, NOT NULL, CHECK > 0 | |
-| created_at  | TIMESTAMPTZ    | |
+| Column     | Type                                                  | Notes |
+| ---------- | ----------------------------------------------------- | ----- |
+| id         | BIGINT (PK)                                           |       |
+| cart_id    | BIGINT, FK → carts.id, NOT NULL, ON DELETE CASCADE    |       |
+| product_id | BIGINT, FK → products.id, NOT NULL, ON DELETE CASCADE |       |
+| quantity   | INTEGER, NOT NULL, CHECK > 0                          |       |
+| created_at | TIMESTAMPTZ                                           |       |
 
 **Constraint:** `UNIQUE (cart_id, product_id)` — the same product appears at most
 once per cart; adding again increments quantity. This prevents duplicate lines.
@@ -181,31 +189,32 @@ once per cart; adding again increments quantity. This prevents duplicate lines.
 ---
 
 ### `orders`
+
 **Why:** A placed order is a **permanent historical record**. It must NOT change if
 a product's price/name later changes or a product is deleted. So orders snapshot
 their financial totals, and `order_items` snapshot product details.
 
-| Column             | Type            | Notes |
-|--------------------|-----------------|-------|
-| id                 | BIGINT (PK)     | |
-| order_number       | TEXT, UNIQUE, NOT NULL | human-facing id shown on confirmation page |
-| user_id            | BIGINT, FK → users.id, NOT NULL, ON DELETE RESTRICT | never silently lose an order's owner |
-| status             | order_status ENUM, default 'PENDING' | |
-| subtotal           | NUMERIC(12,2), NOT NULL | sum of line totals |
-| shipping_fee       | NUMERIC(12,2), NOT NULL, default 0 | |
-| tax                | NUMERIC(12,2), NOT NULL, default 0 | |
-| total              | NUMERIC(12,2), NOT NULL | subtotal + shipping + tax |
-| ship_full_name     | TEXT, NOT NULL  | **snapshotted** shipping address (see §7) |
-| ship_phone         | TEXT, NOT NULL  | |
-| ship_line1         | TEXT, NOT NULL  | |
-| ship_line2         | TEXT, NULLABLE  | |
-| ship_city          | TEXT, NOT NULL  | |
-| ship_state         | TEXT, NOT NULL  | |
-| ship_postal_code   | TEXT, NOT NULL  | |
-| ship_country       | TEXT, NOT NULL  | |
-| placed_at          | TIMESTAMPTZ, default now() | |
-| created_at         | TIMESTAMPTZ     | |
-| updated_at         | TIMESTAMPTZ     | |
+| Column           | Type                                                | Notes                                      |
+| ---------------- | --------------------------------------------------- | ------------------------------------------ |
+| id               | BIGINT (PK)                                         |                                            |
+| order_number     | TEXT, UNIQUE, NOT NULL                              | human-facing id shown on confirmation page |
+| user_id          | BIGINT, FK → users.id, NOT NULL, ON DELETE RESTRICT | never silently lose an order's owner       |
+| status           | order_status ENUM, default 'PENDING'                |                                            |
+| subtotal         | NUMERIC(12,2), NOT NULL                             | sum of line totals                         |
+| shipping_fee     | NUMERIC(12,2), NOT NULL, default 0                  |                                            |
+| tax              | NUMERIC(12,2), NOT NULL, default 0                  |                                            |
+| total            | NUMERIC(12,2), NOT NULL                             | subtotal + shipping + tax                  |
+| ship_full_name   | TEXT, NOT NULL                                      | **snapshotted** shipping address (see §7)  |
+| ship_phone       | TEXT, NOT NULL                                      |                                            |
+| ship_line1       | TEXT, NOT NULL                                      |                                            |
+| ship_line2       | TEXT, NULLABLE                                      |                                            |
+| ship_city        | TEXT, NOT NULL                                      |                                            |
+| ship_state       | TEXT, NOT NULL                                      |                                            |
+| ship_postal_code | TEXT, NOT NULL                                      |                                            |
+| ship_country     | TEXT, NOT NULL                                      |                                            |
+| placed_at        | TIMESTAMPTZ, default now()                          |                                            |
+| created_at       | TIMESTAMPTZ                                         |                                            |
+| updated_at       | TIMESTAMPTZ                                         |                                            |
 
 **Why `order_number` separate from `id`:** the integer PK is internal; we never
 expose sequential PKs publicly (leaks volume, enables guessing). `order_number`
@@ -215,18 +224,19 @@ confirmation page.
 ---
 
 ### `order_items`
+
 **Why:** The frozen line items of an order. Each row **snapshots** the product's
 title and unit price at purchase time, so historical orders stay correct forever.
 
-| Column         | Type            | Notes |
-|----------------|-----------------|-------|
-| id             | BIGINT (PK)     | |
-| order_id       | BIGINT, FK → orders.id, NOT NULL, ON DELETE CASCADE | |
-| product_id     | BIGINT, FK → products.id, NULLABLE, ON DELETE SET NULL | keep the line even if product is later removed |
-| product_title  | TEXT, NOT NULL  | **snapshot** |
-| unit_price     | NUMERIC(12,2), NOT NULL | **snapshot** of price at purchase |
-| quantity       | INTEGER, NOT NULL, CHECK > 0 | |
-| line_total     | NUMERIC(12,2), NOT NULL | unit_price × quantity |
+| Column        | Type                                                   | Notes                                          |
+| ------------- | ------------------------------------------------------ | ---------------------------------------------- |
+| id            | BIGINT (PK)                                            |                                                |
+| order_id      | BIGINT, FK → orders.id, NOT NULL, ON DELETE CASCADE    |                                                |
+| product_id    | BIGINT, FK → products.id, NULLABLE, ON DELETE SET NULL | keep the line even if product is later removed |
+| product_title | TEXT, NOT NULL                                         | **snapshot**                                   |
+| unit_price    | NUMERIC(12,2), NOT NULL                                | **snapshot** of price at purchase              |
+| quantity      | INTEGER, NOT NULL, CHECK > 0                           |                                                |
+| line_total    | NUMERIC(12,2), NOT NULL                                | unit_price × quantity                          |
 
 ---
 
@@ -264,19 +274,19 @@ categories 1───N categories (self, optional sub-categories)
 
 Indexes are chosen from the real query patterns the app issues:
 
-| Index | Table / columns | Serves |
-|-------|-----------------|--------|
-| PK btree (auto) | every `id` | lookups, joins |
-| UNIQUE | `users.email`, `products.slug`, `products.sku`, `categories.slug`, `orders.order_number` | integrity + fast lookup |
-| btree | `products.category_id` | category filter on listing page |
-| **GIN (pg_trgm)** | `products.title` | `ILIKE '%term%'` name search (fuzzy, fast) |
-| btree | `product_images.product_id` | load carousel for a product |
-| btree | `product_specifications.product_id` | load specs for a product |
-| UNIQUE | `cart_items (cart_id, product_id)` | dedupe + fast item lookup |
-| btree | `cart_items.cart_id` | load a cart's items |
-| **partial UNIQUE** | `carts (user_id) WHERE status='ACTIVE'` | one active cart per user |
-| btree | `orders (user_id, placed_at DESC)` | order history, newest first |
-| btree | `order_items.order_id` | load an order's lines |
+| Index              | Table / columns                                                                          | Serves                                     |
+| ------------------ | ---------------------------------------------------------------------------------------- | ------------------------------------------ |
+| PK btree (auto)    | every `id`                                                                               | lookups, joins                             |
+| UNIQUE             | `users.email`, `products.slug`, `products.sku`, `categories.slug`, `orders.order_number` | integrity + fast lookup                    |
+| btree              | `products.category_id`                                                                   | category filter on listing page            |
+| **GIN (pg_trgm)**  | `products.title`                                                                         | `ILIKE '%term%'` name search (fuzzy, fast) |
+| btree              | `product_images.product_id`                                                              | load carousel for a product                |
+| btree              | `product_specifications.product_id`                                                      | load specs for a product                   |
+| UNIQUE             | `cart_items (cart_id, product_id)`                                                       | dedupe + fast item lookup                  |
+| btree              | `cart_items.cart_id`                                                                     | load a cart's items                        |
+| **partial UNIQUE** | `carts (user_id) WHERE status='ACTIVE'`                                                  | one active cart per user                   |
+| btree              | `orders (user_id, placed_at DESC)`                                                       | order history, newest first                |
+| btree              | `order_items.order_id`                                                                   | load an order's lines                      |
 
 **Why pg_trgm for search:** the assignment's search is "by name," typically a
 substring/contains match. A plain btree can't accelerate `ILIKE '%x%'`; a
@@ -348,17 +358,17 @@ move to a `tsvector` full-text index.
 
 ## 9. Future extensibility (no reshaping required)
 
-| Feature | How the schema already supports it |
-|---------|-----------------------------------|
-| Auth (bonus) | `users` already exists; add `password_hash`/sessions. |
-| Order history (bonus) | `orders (user_id, placed_at)` index already serves it. |
-| Sub-categories | `categories.parent_id` self-reference already present. |
-| Reviews | add `reviews` table; `products.rating` becomes its aggregate. |
-| Wishlist (bonus) | add `wishlists` + `wishlist_items` (mirrors cart pattern). |
-| Payments | add `payments` + `payment_status` enum, FK → orders. |
+| Feature                       | How the schema already supports it                                     |
+| ----------------------------- | ---------------------------------------------------------------------- |
+| Auth (bonus)                  | `users` already exists; add `password_hash`/sessions.                  |
+| Order history (bonus)         | `orders (user_id, placed_at)` index already serves it.                 |
+| Sub-categories                | `categories.parent_id` self-reference already present.                 |
+| Reviews                       | add `reviews` table; `products.rating` becomes its aggregate.          |
+| Wishlist (bonus)              | add `wishlists` + `wishlist_items` (mirrors cart pattern).             |
+| Payments                      | add `payments` + `payment_status` enum, FK → orders.                   |
 | Product variants (size/color) | add `product_variants`; `cart_items`/`order_items` point to a variant. |
-| Multi-warehouse inventory | move `stock` into an `inventory` table keyed by warehouse. |
-| Coupons/discounts | add `coupons` + `order_discounts`. |
+| Multi-warehouse inventory     | move `stock` into an `inventory` table keyed by warehouse.             |
+| Coupons/discounts             | add `coupons` + `order_discounts`.                                     |
 
 ---
 
@@ -378,13 +388,13 @@ move to a `tsvector` full-text index.
 **Source:** [DummyJSON Products](https://dummyjson.com/products) — 100 products
 across ~24 categories, free, with real CDN image URLs. Verified field mapping:
 
-| DummyJSON field | Goes to |
-|-----------------|---------|
-| `category` | `categories.name` / `.slug` (deduped into category rows) |
-| `title`, `description`, `brand`, `sku`, `price`, `discountPercentage`, `stock`, `rating`, `thumbnail` | `products.*` |
-| `images[]` | `product_images` rows (with `position`) |
-| `weight`, `dimensions`, `warrantyInformation`, `shippingInformation`, `returnPolicy`, `minimumOrderQuantity` | `product_specifications` key/value rows |
-| `reviews`, `tags`, `meta`, `availabilityStatus` | ignored for now (extra data) |
+| DummyJSON field                                                                                              | Goes to                                                  |
+| ------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------- |
+| `category`                                                                                                   | `categories.name` / `.slug` (deduped into category rows) |
+| `title`, `description`, `brand`, `sku`, `price`, `discountPercentage`, `stock`, `rating`, `thumbnail`        | `products.*`                                             |
+| `images[]`                                                                                                   | `product_images` rows (with `position`)                  |
+| `weight`, `dimensions`, `warrantyInformation`, `shippingInformation`, `returnPolicy`, `minimumOrderQuantity` | `product_specifications` key/value rows                  |
+| `reviews`, `tags`, `meta`, `availabilityStatus`                                                              | ignored for now (extra data)                             |
 
 Plus one seeded **default user**. Cart/order tables start empty and fill through
 normal app use. The seed script fetches DummyJSON, creates de-duplicated

@@ -50,9 +50,7 @@ export default function ProductListingPage() {
 
       <section className={styles.content}>
         <header className={styles.resultsHeader}>
-          <h1 className={styles.title}>
-            {search ? `Results for "${search}"` : 'All Products'}
-          </h1>
+          <h1 className={styles.title}>{search ? `Results for "${search}"` : 'All Products'}</h1>
           {data && <span className={styles.count}>{data.pagination.total} results</span>}
         </header>
 
@@ -60,9 +58,7 @@ export default function ProductListingPage() {
         {error && <p className={styles.error}>{error}</p>}
 
         {!loading && !error && !hasResults && (
-          <p className={styles.empty}>
-            No products found. Try a different search or category.
-          </p>
+          <p className={styles.empty}>No products found. Try a different search or category.</p>
         )}
 
         {!loading && !error && hasResults && (

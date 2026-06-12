@@ -14,8 +14,8 @@ export default function Footer() {
           amazon<span>.clone</span>
         </p>
         <p className={styles.copy}>
-          © {new Date().getFullYear()} Amazon Clone · Built for the SDE assignment ·
-          Not affiliated with Amazon.
+          © {new Date().getFullYear()} Amazon Clone · Built for the SDE assignment · Not affiliated
+          with Amazon.
         </p>
       </div>
     </footer>

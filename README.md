@@ -9,11 +9,11 @@ management, and order placement.
 
 ## Tech Stack
 
-| Layer    | Technology |
-|----------|-----------|
+| Layer    | Technology                                  |
+| -------- | ------------------------------------------- |
 | Frontend | React 18 + Vite + TypeScript + React Router |
-| Backend  | Node.js + Express + TypeScript |
-| Database | PostgreSQL 16 (via Docker) + Prisma ORM |
+| Backend  | Node.js + Express + TypeScript              |
+| Database | PostgreSQL 16 (via Docker) + Prisma ORM     |
 
 ## Repository layout
 
