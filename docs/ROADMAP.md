@@ -13,11 +13,11 @@ Legend: ⬜ not started · 🟨 doing · ✅ done
 - ✅ Folder structure & conventions documented
 - ✅ Repo skeleton + docker-compose for Postgres + git initialized
 
-## Phase 1 — Backend foundation  🟨
+## Phase 1 — Backend foundation  ✅
 - ✅ Prisma + TypeScript set up; connected to the Dockerized Postgres
-- ⬜ Express app boots
-- ⬜ Central config (env), error-handling middleware, response envelope
-- ⬜ `GET /api/health` returns OK
+- ✅ Express 5 app boots (`npm run dev`), graceful shutdown
+- ✅ Typed env config, central error handler, `{ data }`/`{ error }` envelope
+- ✅ `GET /api/health` returns OK
 
 ## Phase 2 — Database schema  ✅
 Designed and migrated (`init` migration). Tables:
