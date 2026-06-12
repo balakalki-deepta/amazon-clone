@@ -26,6 +26,7 @@ interface CartContextValue {
   addItem: (product: Product, quantity?: number) => void;
   updateQuantity: (productId: number, quantity: number) => void;
   removeItem: (productId: number) => void;
+  clearCart: () => void;
 }
 
 const CartContext = createContext<CartContextValue | undefined>(undefined);
@@ -88,12 +89,17 @@ export function CartProvider({ children }: { children: ReactNode }) {
     setItems((current) => current.filter((item) => item.productId !== productId));
   }
 
+  /** Empty the cart (called after a successful order placement). */
+  function clearCart() {
+    setItems([]);
+  }
+
   const totalQuantity = items.reduce((sum, item) => sum + item.quantity, 0);
   const subtotal = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
   return (
     <CartContext.Provider
-      value={{ items, totalQuantity, subtotal, addItem, updateQuantity, removeItem }}
+      value={{ items, totalQuantity, subtotal, addItem, updateQuantity, removeItem, clearCart }}
     >
       {children}
     </CartContext.Provider>

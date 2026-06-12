@@ -1,0 +1,136 @@
+.page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 16px;
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: 16px;
+  align-items: start;
+}
+
+/* ---- Form panel ---- */
+.formPanel {
+  background: #fff;
+  border-radius: 8px;
+  padding: 20px;
+}
+.heading {
+  font-size: 21px;
+  margin: 0 0 16px;
+}
+
+.field {
+  margin-bottom: 14px;
+  flex: 1;
+}
+.label {
+  display: block;
+  font-size: 13px;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+.input {
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid #888c8c;
+  border-radius: 8px;
+  font-size: 14px;
+}
+.input:focus {
+  outline: 2px solid var(--amazon-orange);
+  border-color: var(--amazon-orange);
+}
+.row {
+  display: flex;
+  gap: 12px;
+}
+
+/* ---- Summary ---- */
+.summary {
+  background: #fff;
+  border-radius: 8px;
+  padding: 18px;
+  position: sticky;
+  top: 120px;
+}
+.summaryHeading {
+  font-size: 18px;
+  margin: 0 0 12px;
+}
+
+.reviewList {
+  list-style: none;
+  margin: 0 0 12px;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-height: 260px;
+  overflow-y: auto;
+}
+.reviewItem {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  font-size: 13px;
+}
+.reviewTitle {
+  color: var(--text);
+}
+.reviewQty {
+  color: var(--text-muted);
+}
+
+.summaryRow {
+  display: flex;
+  justify-content: space-between;
+  font-size: 14px;
+  padding: 8px 0;
+  border-top: 1px solid var(--border);
+}
+.summaryTotal {
+  display: flex;
+  justify-content: space-between;
+  font-size: 18px;
+  font-weight: 700;
+  color: #b12704;
+  padding: 8px 0 14px;
+  border-top: 1px solid var(--border);
+}
+
+.error {
+  color: #b12704;
+  font-size: 13px;
+  margin: 0 0 10px;
+}
+
+.placeButton {
+  width: 100%;
+  background: var(--amazon-yellow);
+  border: 1px solid #fcd200;
+  border-radius: 20px;
+  padding: 10px;
+  font-size: 15px;
+  color: var(--text);
+}
+.placeButton:hover:not(:disabled) {
+  background: var(--amazon-yellow-hover);
+}
+.placeButton:disabled {
+  background: #e7e9ec;
+  border-color: var(--border);
+  color: #767676;
+  cursor: not-allowed;
+}
+
+@media (max-width: 800px) {
+  .layout {
+    grid-template-columns: 1fr;
+  }
+  .summary {
+    position: static;
+  }
+}

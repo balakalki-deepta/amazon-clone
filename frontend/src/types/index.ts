@@ -51,6 +51,53 @@ export interface Category {
   productCount: number;
 }
 
+export interface OrderItem {
+  id: number;
+  productId: number | null;
+  productTitle: string;
+  unitPrice: number;
+  quantity: number;
+  lineTotal: number;
+}
+
+export interface OrderShippingAddress {
+  fullName: string;
+  phone: string;
+  line1: string;
+  line2: string | null;
+  city: string;
+  state: string;
+  postalCode: string;
+  country: string;
+}
+
+export interface OrderDetail {
+  id: number;
+  orderNumber: string;
+  status: string;
+  subtotal: number;
+  shippingFee: number;
+  tax: number;
+  total: number;
+  shippingAddress: OrderShippingAddress;
+  items: OrderItem[];
+  placedAt: string;
+}
+
+export interface CreateOrderPayload {
+  items: { productId: number; quantity: number }[];
+  shippingAddress: {
+    fullName: string;
+    phone: string;
+    line1: string;
+    line2?: string;
+    city: string;
+    state: string;
+    postalCode: string;
+    country: string;
+  };
+}
+
 export interface Pagination {
   page: number;
   limit: number;
