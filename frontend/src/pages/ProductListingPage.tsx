@@ -19,7 +19,8 @@ export default function ProductListingPage() {
 
   const search = searchParams.get('search') ?? undefined;
   const category = searchParams.get('category') ?? undefined;
-  const page = Number(searchParams.get('page') ?? '1');
+  // Guard against bad/missing ?page= values (e.g. "abc" or negatives).
+  const page = Math.max(1, Number(searchParams.get('page')) || 1);
 
   const { data, loading, error } = useProducts({ search, category, page });
   const { categories } = useCategories();

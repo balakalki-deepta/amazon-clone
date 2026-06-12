@@ -12,5 +12,6 @@ const baseURL = import.meta.env.VITE_API_URL ?? 'http://localhost:4000/api';
 
 export const apiClient = axios.create({
   baseURL,
+  timeout: 15000, // fail instead of hanging forever if the API is unreachable
   headers: { 'Content-Type': 'application/json' },
 });

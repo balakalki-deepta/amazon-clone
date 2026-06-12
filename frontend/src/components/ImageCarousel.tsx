@@ -27,7 +27,7 @@ export default function ImageCarousel({ images, title, fallback }: ImageCarousel
         <div className={styles.thumbs}>
           {sources.map((src, index) => (
             <button
-              key={src}
+              key={`${index}-${src}`}
               type="button"
               className={index === activeIndex ? styles.thumbActive : styles.thumb}
               onMouseEnter={() => setActiveIndex(index)}
