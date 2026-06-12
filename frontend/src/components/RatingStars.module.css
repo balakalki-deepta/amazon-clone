@@ -1,0 +1,20 @@
+.stars {
+  position: relative;
+  display: inline-block;
+  font-size: 14px;
+  line-height: 1;
+  letter-spacing: 1px;
+}
+
+.back {
+  color: #d5d9d9;
+}
+
+.front {
+  position: absolute;
+  top: 0;
+  left: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  color: var(--amazon-star);
+}

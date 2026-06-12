@@ -1,0 +1,48 @@
+.layout {
+  max-width: 1500px;
+  margin: 0 auto;
+  padding: 14px;
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  gap: 14px;
+}
+
+.content {
+  background: #fff;
+  padding: 14px;
+  border-radius: 4px;
+  min-height: 60vh;
+}
+
+.resultsHeader {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 10px;
+  margin-bottom: 14px;
+}
+.title {
+  font-size: 21px;
+  margin: 0;
+}
+.count {
+  color: var(--text-muted);
+  font-size: 14px;
+}
+
+.error {
+  color: #b12704;
+  padding: 20px 0;
+}
+.empty {
+  color: var(--text-muted);
+  padding: 24px 0;
+}
+
+/* Stack the sidebar on top on small screens. */
+@media (max-width: 800px) {
+  .layout {
+    grid-template-columns: 1fr;
+  }
+}

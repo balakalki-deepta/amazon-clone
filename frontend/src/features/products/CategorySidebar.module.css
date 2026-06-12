@@ -1,0 +1,45 @@
+.sidebar {
+  background: #fff;
+  padding: 14px;
+  border-radius: 4px;
+  align-self: start;
+}
+
+.heading {
+  font-size: 16px;
+  margin: 0 0 8px;
+}
+
+.list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.link,
+.active {
+  width: 100%;
+  text-align: left;
+  background: none;
+  border: none;
+  padding: 5px 6px;
+  font-size: 14px;
+  border-radius: 4px;
+  color: var(--text);
+}
+.link:hover {
+  color: var(--amazon-link-hover);
+  text-decoration: underline;
+}
+.active {
+  color: var(--amazon-link-hover);
+  font-weight: 700;
+}
+
+.count {
+  color: var(--text-muted);
+  font-size: 12px;
+}

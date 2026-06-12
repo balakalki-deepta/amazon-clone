@@ -1,0 +1,46 @@
+.wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.deal {
+  background: #cc0c39;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.price {
+  color: var(--amazon-price);
+  display: inline-flex;
+  align-items: flex-start;
+}
+.symbol {
+  font-size: 12px;
+  margin-top: 3px;
+}
+.whole {
+  font-size: 21px;
+  font-weight: 500;
+}
+.cents {
+  font-size: 12px;
+  margin-top: 3px;
+}
+
+.listLabel {
+  color: var(--text-muted);
+  font-size: 12px;
+}
+.strike {
+  text-decoration: line-through;
+}
