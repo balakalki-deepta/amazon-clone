@@ -45,10 +45,11 @@ Designed and migrated (`init` migration). Tables:
 - ✅ Amazon-style layout shell: header (logo, working search, cart), footer
 - ✅ Routes: `/` (listing placeholder) + 404
 
-## Phase 6 — Product Listing Page  ⬜  (Core Feature 1)
-- Responsive product grid + product card (image, name, price, Add to Cart)
-- Search by name (wired to API)
-- Filter by category
+## Phase 6 — Product Listing Page  ✅  (Core Feature 1)
+- ✅ Responsive product grid + card (image, title, rating, price, Add to Cart)
+- ✅ Search by name (URL-driven, wired to API)
+- ✅ Filter by category (sidebar) + pagination + loading/empty/error states
+- ✅ Minimal client-side cart (Add to Cart works; header badge updates)
 
 ## Phase 7 — Product Detail Page  ⬜  (Core Feature 2)
 - Image carousel (multiple images)
