@@ -69,10 +69,11 @@ origin. After the first deploy, both services have public URLs like
 
 ## Troubleshooting
 
-| Symptom                                               | Fix                                                                                                                              |
-| ----------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
-| Frontend loads but shows no products / network errors | `VITE_API_URL` is wrong or missing `/api`; fix it and redeploy the frontend.                                                     |
-| Browser console shows a CORS error                    | `CORS_ORIGIN` on the API doesn't exactly match the frontend URL (check `https://`, no trailing slash); fix and redeploy the API. |
-| First request is very slow                            | The free API woke from sleep — normal; subsequent requests are fast.                                                             |
-| Products are empty                                    | Re-run the seed (Step 2).                                                                                                        |
-| `DATABASE_URL` / SSL errors                           | If using an external Postgres (e.g. Neon), append `?sslmode=require` to the connection string.                                   |
+| Symptom                                                                       | Fix                                                                                                                                              |
+| ----------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Frontend loads but shows no products / network errors                         | `VITE_API_URL` is wrong or missing `/api`; fix it and redeploy the frontend.                                                                     |
+| Browser console shows a CORS error                                            | `CORS_ORIGIN` on the API doesn't exactly match the frontend URL (check `https://`, no trailing slash); fix and redeploy the API.                 |
+| First request is very slow                                                    | The free API woke from sleep — normal; subsequent requests are fast.                                                                             |
+| Products are empty                                                            | Re-run the seed (Step 2).                                                                                                                        |
+| `DATABASE_URL` / SSL errors                                                   | If using an external Postgres (e.g. Neon), append `?sslmode=require` to the connection string.                                                   |
+| Build fails: `Cannot find name 'process'` / no declaration file for `express` | `NODE_ENV=production` makes `npm install` skip devDeps (TypeScript, `@types/*`); the build command uses `npm install --include=dev` to fix this. |
