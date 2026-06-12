@@ -1,0 +1,4 @@
+# Block the push if any check fails.
+npm run lint
+npm run typecheck
+npm run build

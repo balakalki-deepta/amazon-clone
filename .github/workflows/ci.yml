@@ -1,0 +1,78 @@
+name: CI
+
+# Run on every push and every pull request.
+on:
+  push:
+  pull_request:
+
+jobs:
+  quality:
+    name: Lint, type-check & build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: |
+            package-lock.json
+            backend/package-lock.json
+            frontend/package-lock.json
+
+      - name: Install dependencies
+        run: |
+          npm ci
+          npm ci --prefix backend
+          npm ci --prefix frontend
+
+      - name: Generate Prisma client
+        run: npm run prisma:generate --prefix backend
+
+      - name: Check formatting
+        run: npm run format:check
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Type-check
+        run: npm run typecheck
+
+      - name: Build
+        run: npm run build
+
+  migrations:
+    name: Validate migrations
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: amazon
+          POSTGRES_PASSWORD: amazon
+          POSTGRES_DB: amazon_clone
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U amazon -d amazon_clone"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 5
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: backend/package-lock.json
+
+      - name: Install backend
+        run: npm ci --prefix backend
+
+      - name: Apply migrations to a fresh database
+        working-directory: backend
+        env:
+          DATABASE_URL: postgresql://amazon:amazon@localhost:5432/amazon_clone?schema=public
+        run: npx prisma migrate deploy

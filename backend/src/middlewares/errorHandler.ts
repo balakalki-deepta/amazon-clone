@@ -11,8 +11,13 @@ import { ZodError } from 'zod';
 import { ApiError } from '../utils/ApiError';
 import { env } from '../config/env';
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars -- Express needs the 4-arg signature to detect an error handler.
-export function errorHandler(err: unknown, _req: Request, res: Response, _next: NextFunction): void {
+// Express needs the 4-argument signature to recognise this as an error handler.
+export function errorHandler(
+  err: unknown,
+  _req: Request,
+  res: Response,
+  _next: NextFunction,
+): void {
   // Known, intentional errors carry their own status + code.
   if (err instanceof ApiError) {
     res.status(err.statusCode).json({ error: { message: err.message, code: err.code } });
