@@ -34,10 +34,10 @@ Designed and migrated (`init` migration). Tables:
 - Seeds the default user (`demo@amazonclone.dev`)
 - Idempotent + transactional (`npm run db:seed`)
 
-## Phase 4 — Products API  🟨
+## Phase 4 — Products API  ✅
 - ✅ `GET /api/products` (list, with `?search=`, `?category=`, `?page=`, `?limit=`)
 - ✅ `GET /api/categories` (with product counts)
-- ⬜ `GET /api/products/:slug` (detail incl. images & specs) — with Phase 7
+- ✅ `GET /api/products/:slug` (detail incl. images & specs; 404 if missing)
 
 ## Phase 5 — Frontend foundation  ✅
 - ✅ Vite + React + React Router app boots (`npm run dev`)
@@ -51,11 +51,11 @@ Designed and migrated (`init` migration). Tables:
 - ✅ Filter by category (sidebar) + pagination + loading/empty/error states
 - ✅ Minimal client-side cart (Add to Cart works; header badge updates)
 
-## Phase 7 — Product Detail Page  ⬜  (Core Feature 2)
-- Image carousel (multiple images)
-- Description + specifications
-- Price + stock availability status
-- Add to Cart + Buy Now
+## Phase 7 — Product Detail Page  ✅  (Core Feature 2)
+- ✅ Image carousel (thumbnail strip + main image)
+- ✅ Description + specifications table
+- ✅ Price + stock availability status
+- ✅ Add to Cart + Buy Now (3-column Amazon layout, responsive)
 
 ## Phase 8 — Cart API + Cart state  ⬜
 - `GET/POST/PATCH/DELETE /api/cart` endpoints
