@@ -8,6 +8,7 @@
 
 import type { NextFunction, Request, Response } from 'express';
 import { ZodError } from 'zod';
+import { Prisma } from '@prisma/client';
 import { ApiError } from '../utils/ApiError';
 import { env } from '../config/env';
 
@@ -37,6 +38,21 @@ export function errorHandler(
       },
     });
     return;
+  }
+
+  // Known database errors (Prisma) → friendly status codes.
+  if (err instanceof Prisma.PrismaClientKnownRequestError) {
+    if (err.code === 'P2025') {
+      // Record the query expected to exist was not found.
+      res.status(404).json({ error: { message: 'Resource not found', code: 'NOT_FOUND' } });
+      return;
+    }
+    if (err.code === 'P2002') {
+      // Unique constraint violation.
+      res.status(409).json({ error: { message: 'That record already exists', code: 'CONFLICT' } });
+      return;
+    }
+    // Other Prisma errors fall through to the generic 500 below.
   }
 
   // Anything else is unexpected: log it (in non-production) and hide details.

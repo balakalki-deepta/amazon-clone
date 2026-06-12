@@ -12,10 +12,11 @@ export const createOrderSchema = z.object({
     .array(
       z.object({
         productId: z.number().int().positive(),
-        quantity: z.number().int().min(1),
+        quantity: z.number().int().min(1).max(100), // sane per-line upper bound
       }),
     )
-    .min(1, 'Order must contain at least one item'),
+    .min(1, 'Order must contain at least one item')
+    .max(100, 'Too many items in one order'),
   shippingAddress: z.object({
     fullName: z.string().trim().min(1),
     phone: z.string().trim().min(1),
