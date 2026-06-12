@@ -386,7 +386,29 @@ across ~24 categories, free, with real CDN image URLs. Verified field mapping:
 | `weight`, `dimensions`, `warrantyInformation`, `shippingInformation`, `returnPolicy`, `minimumOrderQuantity` | `product_specifications` key/value rows |
 | `reviews`, `tags`, `meta`, `availabilityStatus` | ignored for now (extra data) |
 
-Plus one seeded **default user** (and a sample address). Cart/order tables start
-empty and fill through normal app use. The seed script will fetch DummyJSON,
-upsert categories, then insert products with their images and specs in a
+Plus one seeded **default user**. Cart/order tables start empty and fill through
+normal app use. The seed script fetches DummyJSON, creates de-duplicated
+categories, then inserts products with their images and specs in a single
 transaction so the seed is idempotent and atomic.
+
+---
+
+## 12. Implementation notes (schema.prisma vs this doc)
+
+Two pragmatic deviations were made when translating this design into Prisma; both
+are documented in `backend/prisma/schema.prisma`:
+
+1. **PKs are `Int` (autoincrement), not `BIGINT`.** Prisma's `Int` is a 32-bit
+   signed integer (max ~2.1B) — far beyond this project's needs — and it avoids
+   the JavaScript `BigInt` JSON-serialization friction that a `BigInt` PK would
+   force into every API response. `BIGINT` remains the theoretical scale choice
+   (§7.4); nothing else in the model changes if we switch later.
+2. **`users.email` is a plain unique `TEXT`, not `CITEXT`.** `CITEXT` needs its own
+   extension; case-insensitivity is handled in the application layer instead. Easy
+   to upgrade later if needed.
+
+Everything else (snake_case names, Decimal money, enums, FK delete behaviour,
+indexes, CHECK constraints, partial unique cart index, and the pg_trgm search
+index) matches this document. The CHECKs, partial index, and trigram index are
+appended as raw SQL in the `init` migration because Prisma can't express them in
+the schema language.

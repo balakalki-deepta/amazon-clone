@@ -13,14 +13,14 @@ Legend: ⬜ not started · 🟨 doing · ✅ done
 - ✅ Folder structure & conventions documented
 - ✅ Repo skeleton + docker-compose for Postgres + git initialized
 
-## Phase 1 — Backend foundation  ⬜
-- Express + TypeScript app boots
-- Central config (env), error-handling middleware, response envelope
-- `GET /api/health` returns OK
-- Prisma connected to the Dockerized Postgres
+## Phase 1 — Backend foundation  🟨
+- ✅ Prisma + TypeScript set up; connected to the Dockerized Postgres
+- ⬜ Express app boots
+- ⬜ Central config (env), error-handling middleware, response envelope
+- ⬜ `GET /api/health` returns OK
 
-## Phase 2 — Database schema  ⬜
-Design and migrate the schema (evaluated criterion). Tables:
+## Phase 2 — Database schema  ✅
+Designed and migrated (`init` migration). Tables:
 - `users` (single default user)
 - `categories`
 - `products`
@@ -29,9 +29,10 @@ Design and migrate the schema (evaluated criterion). Tables:
 - `orders`, `order_items`
 - `addresses` (shipping address on checkout)
 
-## Phase 3 — Seed data  ⬜
-- Seed categories + products across multiple categories with images & specs
-- Seed the default user
+## Phase 3 — Seed data  ✅
+- Seeds from DummyJSON: 24 categories, 194 products, 474 images, 1266 specs
+- Seeds the default user (`demo@amazonclone.dev`)
+- Idempotent + transactional (`npm run db:seed`)
 
 ## Phase 4 — Products API  ⬜
 - `GET /api/products` (list, with `?search=` and `?category=` filters)

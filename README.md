@@ -33,14 +33,28 @@ management, and order placement.
 
 ## Getting started
 
-> Setup steps are filled in as each part is built. For now:
+> Setup steps are filled in as each part is built.
+
+### 1. Start the database (Docker)
 
 ```bash
-# 1. Start the database
-docker compose up -d
+docker compose up -d          # starts PostgreSQL 16 on localhost:5432
 ```
 
-Backend and frontend run instructions will be added in their respective phases.
+### 2. Set up the backend database
+
+```bash
+cd backend
+cp .env.example .env          # DATABASE_URL for the Docker Postgres
+npm install                   # install dependencies
+npx prisma migrate dev        # create tables (runs the init migration)
+npm run db:seed               # load catalog from DummyJSON (idempotent)
+```
+
+After seeding you'll have 24 categories and 194 products with images & specs.
+Inspect the data visually with `npx prisma studio`.
+
+> Frontend and API-server run instructions will be added in their phases.
 
 ## Assumptions
 
