@@ -63,15 +63,27 @@ export async function createOrder(input: CreateOrderInput): Promise<OrderDetail>
     throw new ApiError(500, 'Default user not found. Run the database seed.', 'NO_DEFAULT_USER');
   }
 
+  // Merge duplicate product lines so quantities are summed once. Without this,
+  // the same productId sent twice could each pass the stock check individually
+  // and then over-decrement stock.
+  const mergedItems = [
+    ...input.items
+      .reduce((map, item) => {
+        map.set(item.productId, (map.get(item.productId) ?? 0) + item.quantity);
+        return map;
+      }, new Map<number, number>())
+      .entries(),
+  ].map(([productId, quantity]) => ({ productId, quantity }));
+
   const order = await prisma.$transaction(async (tx) => {
     // Resolve current product data for every line.
-    const productIds = input.items.map((item) => item.productId);
+    const productIds = mergedItems.map((item) => item.productId);
     const products = await tx.product.findMany({ where: { id: { in: productIds } } });
     const productById = new Map(products.map((product) => [product.id, product]));
 
     // Build snapshotted line items with server-side prices, validating stock.
     let subtotal = 0;
-    const orderItems = input.items.map((item) => {
+    const orderItems = mergedItems.map((item) => {
       const product = productById.get(item.productId);
       if (!product) {
         throw ApiError.badRequest(`Product ${item.productId} does not exist`);
@@ -92,7 +104,7 @@ export async function createOrder(input: CreateOrderInput): Promise<OrderDetail>
     });
 
     // Decrement stock for each ordered product.
-    for (const item of input.items) {
+    for (const item of mergedItems) {
       await tx.product.update({
         where: { id: item.productId },
         data: { stock: { decrement: item.quantity } },
