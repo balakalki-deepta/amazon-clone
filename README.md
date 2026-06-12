@@ -28,8 +28,17 @@ management, and order placement.
 ## Documentation
 
 - [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) — how the system is structured and why.
+- [docs/DATABASE.md](docs/DATABASE.md) — schema design and reasoning.
 - [docs/CONVENTIONS.md](docs/CONVENTIONS.md) — coding standards, commit & naming rules.
+- [docs/SECURITY.md](docs/SECURITY.md) — security guardrails (plain English).
+- [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md) — deploy to Render (free), step by step.
 - [docs/ROADMAP.md](docs/ROADMAP.md) — the incremental build plan.
+
+## Deployment
+
+Deployed on [Render](https://render.com) via the `render.yaml` blueprint (backend
+Web Service + PostgreSQL + frontend Static Site). See
+[docs/DEPLOYMENT.md](docs/DEPLOYMENT.md) for click-by-click instructions.
 
 ## Getting started
 
