@@ -1,5 +1,6 @@
 import { useState, type FormEvent } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
+import { useCart } from '../context/CartContext';
 import styles from './Header.module.css';
 
 /**
@@ -11,6 +12,7 @@ export default function Header() {
   const [searchParams] = useSearchParams();
   const [term, setTerm] = useState(searchParams.get('search') ?? '');
   const navigate = useNavigate();
+  const { totalQuantity } = useCart();
 
   function handleSearch(event: FormEvent) {
     event.preventDefault();
@@ -54,8 +56,11 @@ export default function Header() {
           <span className={styles.line2}>&amp; Orders</span>
         </div>
 
-        <Link to="/cart" className={styles.cart} aria-label="Cart">
-          <span className={styles.cartIcon}>🛒</span>
+        <Link to="/cart" className={styles.cart} aria-label={`Cart, ${totalQuantity} items`}>
+          <span className={styles.cartIconWrap}>
+            <span className={styles.cartIcon}>🛒</span>
+            {totalQuantity > 0 && <span className={styles.cartBadge}>{totalQuantity}</span>}
+          </span>
           <span className={styles.line2}>Cart</span>
         </Link>
       </div>
