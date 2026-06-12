@@ -1,0 +1,212 @@
+// Prisma schema — translation of docs/DATABASE.md.
+//
+// Notes on choices that differ slightly from the design doc, for practicality:
+//  - PKs use Int autoincrement (not BIGINT). Prisma's Int is a 32-bit signed
+//    integer (max ~2.1B) — far more than enough here — and it avoids the
+//    JavaScript BigInt JSON-serialization friction we'd otherwise hit in every
+//    API response. BIGINT remains the "theoretical scale" choice (see doc §7).
+//  - Money uses Decimal (NUMERIC under the hood) — never float — as the doc requires.
+//  - snake_case table/column names are kept via @map/@@map so the SQL matches the doc.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum OrderStatus {
+  PENDING
+  CONFIRMED
+  SHIPPED
+  DELIVERED
+  CANCELLED
+}
+
+enum CartStatus {
+  ACTIVE
+  CONVERTED
+  ABANDONED
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  name      String
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  addresses Address[]
+  carts     Cart[]
+  orders    Order[]
+
+  @@map("users")
+}
+
+model Category {
+  id        Int      @id @default(autoincrement())
+  name      String
+  slug      String   @unique
+  parentId  Int?     @map("parent_id")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  // Self-relation: a category can have a parent and many children (sub-categories).
+  parent   Category?  @relation("CategoryTree", fields: [parentId], references: [id], onDelete: SetNull)
+  children Category[] @relation("CategoryTree")
+  products Product[]
+
+  @@index([parentId])
+  @@map("categories")
+}
+
+model Product {
+  id                 Int      @id @default(autoincrement())
+  title              String
+  slug               String   @unique
+  description        String?
+  brand              String?
+  sku                String?  @unique
+  categoryId         Int      @map("category_id")
+  price              Decimal  @db.Decimal(12, 2)
+  discountPercentage Decimal  @default(0) @map("discount_percentage") @db.Decimal(5, 2)
+  stock              Int      @default(0)
+  rating             Decimal? @db.Decimal(3, 2)
+  thumbnailUrl       String?  @map("thumbnail_url")
+  createdAt          DateTime @default(now()) @map("created_at")
+  updatedAt          DateTime @updatedAt @map("updated_at")
+
+  category       Category               @relation(fields: [categoryId], references: [id], onDelete: Restrict)
+  images         ProductImage[]
+  specifications ProductSpecification[]
+  cartItems      CartItem[]
+  orderItems     OrderItem[]
+
+  @@index([categoryId])
+  @@map("products")
+}
+
+model ProductImage {
+  id        Int     @id @default(autoincrement())
+  productId Int     @map("product_id")
+  url       String
+  position  Int     @default(0) @db.SmallInt
+  altText   String? @map("alt_text")
+
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@index([productId])
+  @@map("product_images")
+}
+
+model ProductSpecification {
+  id        Int    @id @default(autoincrement())
+  productId Int    @map("product_id")
+  specKey   String @map("spec_key")
+  specValue String @map("spec_value")
+  position  Int    @default(0) @db.SmallInt
+
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@index([productId])
+  @@map("product_specifications")
+}
+
+model Address {
+  id         Int      @id @default(autoincrement())
+  userId     Int      @map("user_id")
+  fullName   String   @map("full_name")
+  phone      String
+  line1      String
+  line2      String?
+  city       String
+  state      String
+  postalCode String   @map("postal_code")
+  country    String
+  isDefault  Boolean  @default(false) @map("is_default")
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("addresses")
+}
+
+model Cart {
+  id        Int        @id @default(autoincrement())
+  userId    Int        @map("user_id")
+  status    CartStatus @default(ACTIVE)
+  createdAt DateTime   @default(now()) @map("created_at")
+  updatedAt DateTime   @updatedAt @map("updated_at")
+
+  user  User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  items CartItem[]
+
+  // A partial UNIQUE index (one ACTIVE cart per user) is added via raw SQL in the
+  // migration, since Prisma can't express partial indexes in the schema.
+  @@index([userId])
+  @@map("carts")
+}
+
+model CartItem {
+  id        Int      @id @default(autoincrement())
+  cartId    Int      @map("cart_id")
+  productId Int      @map("product_id")
+  quantity  Int
+  createdAt DateTime @default(now()) @map("created_at")
+
+  cart    Cart    @relation(fields: [cartId], references: [id], onDelete: Cascade)
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@unique([cartId, productId])
+  @@index([cartId])
+  @@map("cart_items")
+}
+
+model Order {
+  id             Int         @id @default(autoincrement())
+  orderNumber    String      @unique @map("order_number")
+  userId         Int         @map("user_id")
+  status         OrderStatus @default(PENDING)
+  subtotal       Decimal     @db.Decimal(12, 2)
+  shippingFee    Decimal     @default(0) @map("shipping_fee") @db.Decimal(12, 2)
+  tax            Decimal     @default(0) @db.Decimal(12, 2)
+  total          Decimal     @db.Decimal(12, 2)
+  // Snapshotted shipping address — an order is an immutable receipt (doc §7).
+  shipFullName   String      @map("ship_full_name")
+  shipPhone      String      @map("ship_phone")
+  shipLine1      String      @map("ship_line1")
+  shipLine2      String?     @map("ship_line2")
+  shipCity       String      @map("ship_city")
+  shipState      String      @map("ship_state")
+  shipPostalCode String      @map("ship_postal_code")
+  shipCountry    String      @map("ship_country")
+  placedAt       DateTime    @default(now()) @map("placed_at")
+  createdAt      DateTime    @default(now()) @map("created_at")
+  updatedAt      DateTime    @updatedAt @map("updated_at")
+
+  user  User        @relation(fields: [userId], references: [id], onDelete: Restrict)
+  items OrderItem[]
+
+  @@index([userId, placedAt(sort: Desc)])
+  @@map("orders")
+}
+
+model OrderItem {
+  id           Int     @id @default(autoincrement())
+  orderId      Int     @map("order_id")
+  productId    Int?    @map("product_id")
+  // Snapshotted product details — survive product price/name changes or deletion.
+  productTitle String  @map("product_title")
+  unitPrice    Decimal @map("unit_price") @db.Decimal(12, 2)
+  quantity     Int
+  lineTotal    Decimal @map("line_total") @db.Decimal(12, 2)
+
+  order   Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product Product? @relation(fields: [productId], references: [id], onDelete: SetNull)
+
+  @@index([orderId])
+  @@index([productId])
+  @@map("order_items")
+}
