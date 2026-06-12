@@ -57,13 +57,14 @@ Designed and migrated (`init` migration). Tables:
 - ✅ Price + stock availability status
 - ✅ Add to Cart + Buy Now (3-column Amazon layout, responsive)
 
-## Phase 8 — Cart API + Cart state  ⬜
-- `GET/POST/PATCH/DELETE /api/cart` endpoints
-- Frontend CartContext
+## Phase 8 — Cart state  ✅
+- ✅ Client-side CartContext (localStorage): add, update qty, remove, subtotal
+- Decision: cart lives client-side and is submitted to the backend at order
+  placement — no separate cart API needed for this app.
 
-## Phase 9 — Shopping Cart Page  ⬜  (Core Feature 3)
-- List items, update quantity, remove item
-- Cart summary: subtotal + total
+## Phase 9 — Shopping Cart Page  ✅  (Core Feature 3)
+- ✅ List items, update quantity (stepper), remove item
+- ✅ Cart summary: subtotal + item count; empty state; sticky checkout box
 
 ## Phase 10 — Order API  ⬜
 - `POST /api/orders` (create from cart + shipping address)
