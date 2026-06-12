@@ -54,7 +54,21 @@ npm run db:seed               # load catalog from DummyJSON (idempotent)
 After seeding you'll have 24 categories and 194 products with images & specs.
 Inspect the data visually with `npx prisma studio`.
 
-> Frontend and API-server run instructions will be added in their phases.
+### 3. Run the API server
+
+```bash
+cd backend
+npm run dev                   # → http://localhost:4000  (GET /api/health)
+```
+
+### 4. Run the frontend
+
+```bash
+cd frontend
+cp .env.example .env          # VITE_API_URL → the backend
+npm install
+npm run dev                   # → http://localhost:5173
+```
 
 ## Assumptions
 

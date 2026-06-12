@@ -39,10 +39,11 @@ Designed and migrated (`init` migration). Tables:
 - ✅ `GET /api/categories` (with product counts)
 - ⬜ `GET /api/products/:slug` (detail incl. images & specs) — with Phase 7
 
-## Phase 5 — Frontend foundation  ⬜
-- Vite + React Router app boots
-- API client (axios), shared types
-- Amazon-style layout shell: top nav/header, search bar, footer
+## Phase 5 — Frontend foundation  ✅
+- ✅ Vite + React + React Router app boots (`npm run dev`)
+- ✅ Typed axios API client (`VITE_API_URL`)
+- ✅ Amazon-style layout shell: header (logo, working search, cart), footer
+- ✅ Routes: `/` (listing placeholder) + 404
 
 ## Phase 6 — Product Listing Page  ⬜  (Core Feature 1)
 - Responsive product grid + product card (image, name, price, Add to Cart)
