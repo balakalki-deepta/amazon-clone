@@ -39,6 +39,15 @@ export default tseslint.config(
     },
   },
 
+  // Generated shadcn/ui primitives: allow exporting variants next to components.
+  {
+    files: ['frontend/src/components/ui/**/*.{ts,tsx}'],
+    plugins: { 'react-refresh': reactRefresh },
+    rules: {
+      'react-refresh/only-export-components': 'off',
+    },
+  },
+
   // Shared rule tweaks for all TS files.
   {
     files: ['**/*.{ts,tsx}'],

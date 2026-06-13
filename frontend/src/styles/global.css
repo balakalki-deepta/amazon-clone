@@ -1,53 +1,127 @@
-/* Amazon-inspired design tokens + a light reset. Shared by the whole app. */
+@import 'tailwindcss';
 
-:root {
-  --amazon-dark: #131921; /* primary header */
-  --amazon-darklight: #232f3e; /* secondary header */
-  --amazon-yellow: #febd69; /* search button */
-  --amazon-yellow-hover: #f3a847;
-  --amazon-orange: #ff9900; /* logo accent, focus ring */
-  --amazon-link: #007185; /* product title links */
-  --amazon-link-hover: #c7511f;
-  --amazon-bg: #eaeded; /* page background */
-  --amazon-star: #ffa41c; /* rating stars */
-  --text: #0f1111;
-  --text-muted: #565959;
-  --border: #d5d9d9;
+/* ----------------------------------------------------------------------------
+ * Amazon brand colors, exposed as Tailwind theme tokens.
+ * Usage: bg-amazon-yellow, text-amazon-link, border-amazon-border, ...
+ * ------------------------------------------------------------------------- */
+@theme {
+  --color-amazon-dark: #131921;
+  --color-amazon-darklight: #232f3e;
+  --color-amazon-yellow: #febd69;
+  --color-amazon-yellow-hover: #f3a847;
+  --color-amazon-orange: #ff9900;
+  --color-amazon-link: #007185;
+  --color-amazon-link-hover: #c7511f;
+  --color-amazon-bg: #eaeded;
+  --color-amazon-star: #ffa41c;
+  --color-amazon-ink: #0f1111;
+  --color-amazon-muted: #565959;
+  --color-amazon-border: #d5d9d9;
 }
 
+/* ----------------------------------------------------------------------------
+ * shadcn/ui design tokens (mapped onto the Amazon palette) + legacy tokens
+ * used by the CSS Modules that are still being migrated.
+ * ------------------------------------------------------------------------- */
+:root {
+  --radius: 0.5rem;
+
+  /* shadcn semantic tokens */
+  --background: #ffffff;
+  --foreground: #0f1111;
+  --card: #ffffff;
+  --card-foreground: #0f1111;
+  --popover: #ffffff;
+  --popover-foreground: #0f1111;
+  --primary: #131921;
+  --primary-foreground: #ffffff;
+  --secondary: #f0f2f2;
+  --secondary-foreground: #0f1111;
+  --muted: #f0f2f2;
+  --muted-foreground: #565959;
+  --accent: #f0f2f2;
+  --accent-foreground: #0f1111;
+  --destructive: #b12704;
+  --destructive-foreground: #ffffff;
+  --border: #d5d9d9;
+  --input: #d5d9d9;
+  --ring: #ff9900;
+
+  /* legacy tokens (CSS Modules still being migrated) */
+  --amazon-dark: #131921;
+  --amazon-darklight: #232f3e;
+  --amazon-yellow: #febd69;
+  --amazon-yellow-hover: #f3a847;
+  --amazon-orange: #ff9900;
+  --amazon-link: #007185;
+  --amazon-link-hover: #c7511f;
+  --amazon-bg: #eaeded;
+  --amazon-star: #ffa41c;
+  --text: #0f1111;
+  --text-muted: #565959;
+}
+
+/* Map shadcn tokens to Tailwind color utilities (bg-primary, border-input, ...). */
+@theme inline {
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+}
+
+@layer base {
+  * {
+    border-color: var(--border);
+  }
+  body {
+    font-family: 'Amazon Ember', Arial, Helvetica, sans-serif;
+    color: var(--text);
+    background: var(--amazon-bg);
+    -webkit-font-smoothing: antialiased;
+  }
+}
+
+/* ---- Base resets / app shell (kept from the original global styles) ---- */
 * {
   box-sizing: border-box;
 }
-
 html,
 body {
   margin: 0;
   padding: 0;
 }
-
-body {
-  font-family: 'Amazon Ember', Arial, Helvetica, sans-serif;
-  color: var(--text);
-  background: var(--amazon-bg);
-  -webkit-font-smoothing: antialiased;
-}
-
 a {
   color: inherit;
   text-decoration: none;
 }
-
 img {
   display: block;
   max-width: 100%;
 }
-
 button {
   font-family: inherit;
   cursor: pointer;
 }
 
-/* App shell: keeps the footer at the bottom on short pages. */
 .app-shell {
   display: flex;
   flex-direction: column;

@@ -6,6 +6,11 @@
     "module": "ESNext",
     "skipLibCheck": true,
 
+    /* Path alias for shadcn/ui and app imports */
+    "paths": {
+      "@/*": ["./src/*"]
+    },
+
     /* Bundler mode — Vite does the actual bundling; tsc only type-checks. */
     "moduleResolution": "bundler",
     "allowImportingTsExtensions": true,
