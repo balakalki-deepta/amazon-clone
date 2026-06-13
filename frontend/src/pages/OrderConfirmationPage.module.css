@@ -132,3 +132,23 @@
     grid-template-columns: 1fr;
   }
 }
+
+@media (max-width: 600px) {
+  .page {
+    padding: 12px;
+  }
+  .banner {
+    padding: 16px;
+    gap: 12px;
+  }
+  .bannerTitle {
+    font-size: 18px;
+  }
+  .panel {
+    padding: 16px;
+  }
+  .actions {
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+}

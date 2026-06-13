@@ -74,6 +74,9 @@ export default function Header() {
         <Link to="/wishlist" className={styles.subnavLink}>
           ♥ Wishlist{wishlistCount > 0 ? ` (${wishlistCount})` : ''}
         </Link>
+        <Link to="/orders" className={styles.subnavLink}>
+          Your Orders
+        </Link>
         <Link to="/" className={styles.subnavLink}>
           Today's Deals
         </Link>

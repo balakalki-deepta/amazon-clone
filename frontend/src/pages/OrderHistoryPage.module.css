@@ -10,6 +10,15 @@
   margin: 0 0 16px;
 }
 
+@media (max-width: 600px) {
+  .page {
+    padding: 12px;
+  }
+  .heading {
+    font-size: 22px;
+  }
+}
+
 .list {
   display: flex;
   flex-direction: column;
