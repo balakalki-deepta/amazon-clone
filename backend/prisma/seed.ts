@@ -89,10 +89,14 @@ function buildImages(product: DummyProduct): Prisma.ProductImageCreateWithoutPro
   if (urls.length === 0 && product.thumbnail) {
     urls = [product.thumbnail];
   }
-  // Ensure at least two images so the carousel/thumbnail strip always shows
-  // (duplicate the single image when that's all we have).
+  // Ensure at least two images so the carousel/thumbnail strip always shows.
+  // Prefer a genuinely different image (the product thumbnail) as the second;
+  // only duplicate the single image when nothing else is available.
   if (urls.length === 1) {
-    urls = [urls[0], urls[0]];
+    urls =
+      product.thumbnail && product.thumbnail !== urls[0]
+        ? [urls[0], product.thumbnail]
+        : [urls[0], urls[0]];
   }
 
   return urls.map((url, index) => ({
