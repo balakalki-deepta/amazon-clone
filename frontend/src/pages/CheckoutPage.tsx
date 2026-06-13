@@ -2,6 +2,7 @@ import { useState, type ChangeEvent, type FormEvent } from 'react';
 import { Navigate, useNavigate } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import { createOrder } from '../api/orders';
+import { getApiErrorMessage } from '../api/errorMessage';
 import { formatPrice } from '../utils/formatPrice';
 import styles from './CheckoutPage.module.css';
 
@@ -73,8 +74,10 @@ export default function CheckoutPage() {
       });
       clearCart();
       navigate(`/order/${order.orderNumber}`);
-    } catch {
-      setError('Something went wrong placing your order. Please try again.');
+    } catch (err) {
+      setError(
+        getApiErrorMessage(err, 'Something went wrong placing your order. Please try again.'),
+      );
       setSubmitting(false);
     }
   }
