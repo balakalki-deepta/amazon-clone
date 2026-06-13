@@ -83,7 +83,18 @@ function humanize(slug: string): string {
 
 /** Build ordered image rows; safely handles a missing/empty images array. */
 function buildImages(product: DummyProduct): Prisma.ProductImageCreateWithoutProductInput[] {
-  const urls = (product.images ?? []).filter((url): url is string => Boolean(url));
+  let urls = (product.images ?? []).filter((url): url is string => Boolean(url));
+
+  // Fall back to the thumbnail when there are no gallery images.
+  if (urls.length === 0 && product.thumbnail) {
+    urls = [product.thumbnail];
+  }
+  // Ensure at least two images so the carousel/thumbnail strip always shows
+  // (duplicate the single image when that's all we have).
+  if (urls.length === 1) {
+    urls = [urls[0], urls[0]];
+  }
+
   return urls.map((url, index) => ({
     url,
     position: index,
