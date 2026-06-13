@@ -1,0 +1,54 @@
+.section {
+  max-width: 1400px;
+  margin: 16px auto 0;
+  padding: 16px;
+  background: #fff;
+  border-radius: 8px;
+}
+
+.heading {
+  font-size: 20px;
+  margin: 0 0 14px;
+}
+
+.carousel {
+  position: relative;
+}
+
+.track {
+  display: flex;
+  gap: 14px;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  padding-bottom: 6px;
+}
+
+.item {
+  flex: 0 0 200px;
+  width: 200px;
+}
+
+.navLeft,
+.navRight {
+  position: absolute;
+  top: 0;
+  bottom: 6px;
+  width: 36px;
+  z-index: 2;
+  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.92);
+  font-size: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.navLeft:hover,
+.navRight:hover {
+  background: #f0f2f2;
+}
+.navLeft {
+  left: -6px;
+}
+.navRight {
+  right: -6px;
+}

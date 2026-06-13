@@ -6,6 +6,9 @@ import RatingStars from '../components/RatingStars';
 import Price from '../components/Price';
 import WishlistButton from '../components/WishlistButton';
 import Spinner from '../components/Spinner';
+import ProductFeatures, { type ProductFeature } from '../features/products/ProductFeatures';
+import RelatedProducts from '../features/products/RelatedProducts';
+import { formatDate } from '../utils/formatDate';
 import styles from './ProductDetailPage.module.css';
 
 /**
@@ -43,6 +46,23 @@ export default function ProductDetailPage() {
     navigate('/cart');
   };
 
+  // Pull a few known specs out for the Amazon-style feature row / buy box.
+  const findSpec = (key: string) => product.specifications.find((s) => s.key === key)?.value;
+  const shipping = findSpec('Shipping');
+  const returnPolicy = findSpec('Return Policy');
+  const warranty = findSpec('Warranty');
+
+  const features: ProductFeature[] = [];
+  if (shipping) features.push({ icon: '🚚', label: 'Delivery', sub: shipping });
+  if (returnPolicy) features.push({ icon: '↩️', label: 'Returns', sub: returnPolicy });
+  if (warranty) features.push({ icon: '🛡️', label: 'Warranty', sub: warranty });
+  features.push({ icon: '💵', label: 'Pay on Delivery', sub: 'Eligible' });
+  features.push({ icon: '🔒', label: 'Secure transaction' });
+  if (product.brand) features.push({ icon: '🏆', label: 'Top Brand', sub: product.brand });
+
+  // Estimated delivery: a few days out.
+  const deliveryDate = formatDate(new Date(Date.now() + 4 * 24 * 60 * 60 * 1000).toISOString());
+
   return (
     <div className={styles.page}>
       <div className={styles.grid}>
@@ -72,6 +92,8 @@ export default function ProductDetailPage() {
           <Price price={product.price} discountPercentage={product.discountPercentage} />
           <hr className={styles.divider} />
 
+          <ProductFeatures features={features} />
+
           {product.description && (
             <>
               <h2 className={styles.sectionHeading}>About this item</h2>
@@ -98,6 +120,11 @@ export default function ProductDetailPage() {
 
         <aside className={styles.buyBox}>
           <Price price={product.price} discountPercentage={product.discountPercentage} />
+          {!outOfStock && (
+            <p className={styles.delivery}>
+              🚚 FREE delivery <strong>{deliveryDate}</strong>
+            </p>
+          )}
           <p className={outOfStock || lowStock ? styles.outOfStock : styles.inStock}>
             {outOfStock
               ? 'Currently unavailable'
@@ -122,8 +149,31 @@ export default function ProductDetailPage() {
             Buy Now
           </button>
           <WishlistButton product={product} variant="full" />
+
+          <dl className={styles.buyMeta}>
+            <div>
+              <dt>Ships from</dt>
+              <dd>Amazon Clone</dd>
+            </div>
+            <div>
+              <dt>Sold by</dt>
+              <dd>Amazon Clone</dd>
+            </div>
+            {returnPolicy && (
+              <div>
+                <dt>Returns</dt>
+                <dd>{returnPolicy}</dd>
+              </div>
+            )}
+            <div>
+              <dt>Payment</dt>
+              <dd>Secure transaction</dd>
+            </div>
+          </dl>
         </aside>
       </div>
+
+      <RelatedProducts categorySlug={product.category.slug} excludeId={product.id} />
     </div>
   );
 }

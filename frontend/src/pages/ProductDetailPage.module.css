@@ -99,6 +99,10 @@
   position: sticky;
   top: 120px;
 }
+.delivery {
+  font-size: 14px;
+  margin: 0;
+}
 .inStock {
   color: #007600;
   font-size: 16px;
@@ -108,6 +112,28 @@
   color: #b12704;
   font-size: 16px;
   margin: 0;
+}
+
+.buyMeta {
+  margin: 4px 0 0;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 13px;
+}
+.buyMeta div {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+.buyMeta dt {
+  color: var(--text-muted);
+}
+.buyMeta dd {
+  margin: 0;
+  text-align: right;
 }
 
 .addButton,
