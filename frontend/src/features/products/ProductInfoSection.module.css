@@ -1,0 +1,58 @@
+.section {
+  max-width: 1400px;
+  margin: 16px auto 0;
+  padding: 24px;
+  background: #fff;
+  border-radius: 8px;
+}
+
+.heading {
+  font-size: 22px;
+  font-weight: 600;
+  margin: 0 0 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+}
+.heading:not(:first-child) {
+  margin-top: 32px;
+}
+
+.description {
+  font-size: 14px;
+  line-height: 1.7;
+  color: var(--text);
+  max-width: 800px;
+}
+
+.images {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  margin-top: 16px;
+}
+.image {
+  max-width: 600px;
+  width: 100%;
+  object-fit: contain;
+}
+
+.table {
+  width: 100%;
+  max-width: 800px;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+.table th,
+.table td {
+  text-align: left;
+  padding: 9px 12px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+}
+.table th {
+  width: 35%;
+  background: #f7f8f8;
+  color: var(--text-muted);
+  font-weight: 600;
+}

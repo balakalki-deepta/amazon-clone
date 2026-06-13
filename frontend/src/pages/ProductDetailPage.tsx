@@ -7,6 +7,8 @@ import Price from '../components/Price';
 import WishlistButton from '../components/WishlistButton';
 import Spinner from '../components/Spinner';
 import ProductFeatures, { type ProductFeature } from '../features/products/ProductFeatures';
+import ProductOffers from '../features/products/ProductOffers';
+import ProductInfoSection from '../features/products/ProductInfoSection';
 import RelatedProducts from '../features/products/RelatedProducts';
 import { formatDate } from '../utils/formatDate';
 import styles from './ProductDetailPage.module.css';
@@ -46,19 +48,37 @@ export default function ProductDetailPage() {
     navigate('/cart');
   };
 
-  // Pull a few known specs out for the Amazon-style feature row / buy box.
+  // Pull a few known specs for the feature row, about list, and buy box.
   const findSpec = (key: string) => product.specifications.find((s) => s.key === key)?.value;
   const shipping = findSpec('Shipping');
   const returnPolicy = findSpec('Return Policy');
   const warranty = findSpec('Warranty');
+  const weight = findSpec('Weight');
+  const dimensions = findSpec('Dimensions');
 
-  const features: ProductFeature[] = [];
-  if (shipping) features.push({ icon: '🚚', label: 'Delivery', sub: shipping });
-  if (returnPolicy) features.push({ icon: '↩️', label: 'Returns', sub: returnPolicy });
-  if (warranty) features.push({ icon: '🛡️', label: 'Warranty', sub: warranty });
-  features.push({ icon: '💵', label: 'Pay on Delivery', sub: 'Eligible' });
-  features.push({ icon: '🔒', label: 'Secure transaction' });
-  if (product.brand) features.push({ icon: '🏆', label: 'Top Brand', sub: product.brand });
+  const returnLabel =
+    returnPolicy && /no return/i.test(returnPolicy)
+      ? 'Non-returnable'
+      : returnPolicy
+        ? returnPolicy.replace(/return policy/i, 'Returnable').trim()
+        : '10 days Returnable';
+
+  const features: ProductFeature[] = [
+    { name: 'delivery', label: 'Free Delivery' },
+    { name: 'cod', label: 'Pay on Delivery' },
+    { name: 'returns', label: returnLabel },
+    { name: 'warranty', label: warranty ?? 'Warranty Policy' },
+    { name: 'secure', label: 'Secure transaction' },
+  ];
+  if (product.brand) features.push({ name: 'brand', label: 'Top Brand' });
+
+  const aboutBullets: string[] = [];
+  if (product.brand) aboutBullets.push(`Brand: ${product.brand}`);
+  if (warranty) aboutBullets.push(`Warranty: ${warranty}`);
+  if (returnPolicy) aboutBullets.push(`Return policy: ${returnPolicy}`);
+  if (shipping) aboutBullets.push(`Delivery: ${shipping}`);
+  if (dimensions) aboutBullets.push(`Dimensions: ${dimensions}`);
+  if (weight) aboutBullets.push(`Weight: ${weight}`);
 
   // Estimated delivery: a few days out.
   const deliveryDate = formatDate(new Date(Date.now() + 4 * 24 * 60 * 60 * 1000).toISOString());
@@ -90,30 +110,19 @@ export default function ProductDetailPage() {
 
           <hr className={styles.divider} />
           <Price price={product.price} discountPercentage={product.discountPercentage} />
-          <hr className={styles.divider} />
+
+          <ProductOffers />
 
           <ProductFeatures features={features} />
 
-          {product.description && (
+          {aboutBullets.length > 0 && (
             <>
               <h2 className={styles.sectionHeading}>About this item</h2>
-              <p className={styles.description}>{product.description}</p>
-            </>
-          )}
-
-          {product.specifications.length > 0 && (
-            <>
-              <h2 className={styles.sectionHeading}>Product details</h2>
-              <table className={styles.specs}>
-                <tbody>
-                  {product.specifications.map((spec) => (
-                    <tr key={spec.id}>
-                      <th>{spec.key}</th>
-                      <td>{spec.value}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+              <ul className={styles.aboutList}>
+                {aboutBullets.map((point) => (
+                  <li key={point}>{point}</li>
+                ))}
+              </ul>
             </>
           )}
         </div>
@@ -172,6 +181,8 @@ export default function ProductDetailPage() {
           </dl>
         </aside>
       </div>
+
+      <ProductInfoSection product={product} />
 
       <RelatedProducts categorySlug={product.category.slug} excludeId={product.id} />
     </div>

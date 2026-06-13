@@ -1,8 +1,7 @@
 .row {
   display: flex;
-  gap: 8px;
   overflow-x: auto;
-  padding: 12px 0;
+  padding: 14px 0;
   border-top: 1px solid var(--border);
   border-bottom: 1px solid var(--border);
   margin: 14px 0;
@@ -10,27 +9,28 @@
 
 .feature {
   flex: 0 0 auto;
-  min-width: 100px;
+  width: 92px;
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
-  gap: 4px;
-  padding: 0 10px;
+  gap: 6px;
+  padding: 0 8px;
 }
 .feature + .feature {
   border-left: 1px solid var(--border);
 }
 
-.icon {
-  font-size: 22px;
+.iconWrap {
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #565959;
 }
+
 .label {
   font-size: 12px;
-  font-weight: 600;
-  color: var(--amazon-link);
-}
-.sub {
-  font-size: 11px;
-  color: var(--text-muted);
+  line-height: 1.25;
+  color: #565959;
 }

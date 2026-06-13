@@ -65,8 +65,9 @@ Designed and migrated (`init` migration). Tables:
 - ✅ Description + specifications table
 - ✅ Price + stock availability status
 - ✅ Add to Cart + Buy Now (3-column Amazon layout, responsive)
-- ✅ Feature row (delivery/returns/warranty/payment) + buy-box details
+- ✅ Compact SVG feature icons + static Offers strip + buy-box details
   (ships from, sold by, returns, secure payment) + delivery estimate
+- ✅ End-of-page "Product description" (with images) and "Product information" table
 - ✅ "Products related to this item" carousel (same category)
 
 ## Phase 8 — Cart state ✅
