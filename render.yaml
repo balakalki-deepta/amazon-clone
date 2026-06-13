@@ -21,10 +21,11 @@ services:
     plan: free
     rootDir: backend
     # install (incl. devDeps for tsc) → generate Prisma client → compile →
-    # migrate → seed. The seed is idempotent (skips if products already exist),
-    # so it only fills the catalog on the first deploy and won't wipe later data.
+    # migrate → seed → backfill images. The seed is idempotent (skips if products
+    # already exist); the image backfill is non-destructive and just adds a second
+    # image to any product missing one, so it fixes existing data without a wipe.
     # --include=dev is required because NODE_ENV=production otherwise skips devDeps.
-    buildCommand: npm install --include=dev && npx prisma generate && npm run build && npx prisma migrate deploy && npm run db:seed
+    buildCommand: npm install --include=dev && npx prisma generate && npm run build && npx prisma migrate deploy && npm run db:seed && npm run db:backfill-images
     startCommand: npm run start
     healthCheckPath: /api/health
     envVars:
