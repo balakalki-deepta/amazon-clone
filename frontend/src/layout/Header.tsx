@@ -1,6 +1,7 @@
 import { useState, type FormEvent } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
+import { useWishlist } from '../context/WishlistContext';
 import styles from './Header.module.css';
 
 /**
@@ -13,6 +14,7 @@ export default function Header() {
   const [term, setTerm] = useState(searchParams.get('search') ?? '');
   const navigate = useNavigate();
   const { totalQuantity } = useCart();
+  const { count: wishlistCount } = useWishlist();
 
   function handleSearch(event: FormEvent) {
     event.preventDefault();
@@ -68,6 +70,9 @@ export default function Header() {
       <nav className={styles.subnav} aria-label="Departments">
         <Link to="/" className={styles.subnavLink}>
           ☰ All
+        </Link>
+        <Link to="/wishlist" className={styles.subnavLink}>
+          ♥ Wishlist{wishlistCount > 0 ? ` (${wishlistCount})` : ''}
         </Link>
         <Link to="/" className={styles.subnavLink}>
           Today's Deals

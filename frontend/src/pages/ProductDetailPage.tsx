@@ -4,6 +4,7 @@ import { useCart } from '../context/CartContext';
 import ImageCarousel from '../components/ImageCarousel';
 import RatingStars from '../components/RatingStars';
 import Price from '../components/Price';
+import WishlistButton from '../components/WishlistButton';
 import Spinner from '../components/Spinner';
 import styles from './ProductDetailPage.module.css';
 
@@ -120,6 +121,7 @@ export default function ProductDetailPage() {
           >
             Buy Now
           </button>
+          <WishlistButton product={product} variant="full" />
         </aside>
       </div>
     </div>

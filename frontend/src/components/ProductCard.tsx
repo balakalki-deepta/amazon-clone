@@ -3,6 +3,7 @@ import type { Product } from '../types';
 import { useCart } from '../context/CartContext';
 import RatingStars from './RatingStars';
 import Price from './Price';
+import WishlistButton from './WishlistButton';
 import styles from './ProductCard.module.css';
 
 interface ProductCardProps {
@@ -20,6 +21,8 @@ export default function ProductCard({ product }: ProductCardProps) {
 
   return (
     <article className={styles.card}>
+      <WishlistButton product={product} />
+
       <Link to={detailUrl} className={styles.imageWrap}>
         {product.thumbnailUrl ? (
           <img
