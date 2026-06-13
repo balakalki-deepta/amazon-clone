@@ -1,14 +1,15 @@
 /**
- * Minimal client-side cart state, persisted to localStorage.
+ * Client-side cart state, persisted to localStorage.
  *
- * Scope for now: add items and expose the total count (used by the header badge
- * and the Add-to-Cart button). Viewing/editing the cart and syncing to the
- * backend come in later steps; this keeps the listing page's button functional
- * without pulling the whole cart feature forward.
+ * Quantities are capped at what's actually available: a product's stock, and a
+ * hard ceiling (MAX_CART_QUANTITY) that matches the backend's per-line limit.
+ * This is where Amazon enforces quantity limits too — at the cart's quantity
+ * selector — so the user never reaches checkout with an impossible order.
  */
 
 import { createContext, useContext, useEffect, useState, type ReactNode } from 'react';
 import type { Product } from '../types';
+import { maxQuantityFor } from './cartQuantity';
 
 export interface CartItem {
   productId: number;
@@ -16,6 +17,7 @@ export interface CartItem {
   title: string;
   price: number;
   thumbnailUrl: string | null;
+  stock: number;
   quantity: number;
 }
 
@@ -50,11 +52,18 @@ export function CartProvider({ children }: { children: ReactNode }) {
   }, [items]);
 
   function addItem(product: Product, quantity = 1) {
+    const cap = maxQuantityFor(product.stock);
     setItems((current) => {
       const existing = current.find((item) => item.productId === product.id);
       if (existing) {
         return current.map((item) =>
-          item.productId === product.id ? { ...item, quantity: item.quantity + quantity } : item,
+          item.productId === product.id
+            ? {
+                ...item,
+                stock: product.stock, // refresh the stock snapshot
+                quantity: Math.min(item.quantity + quantity, cap),
+              }
+            : item,
         );
       }
       return [
@@ -65,19 +74,24 @@ export function CartProvider({ children }: { children: ReactNode }) {
           title: product.title,
           price: product.price,
           thumbnailUrl: product.thumbnailUrl,
-          quantity,
+          stock: product.stock,
+          quantity: Math.min(quantity, cap),
         },
       ];
     });
   }
 
-  /** Set an item's quantity; a quantity of 0 or less removes it. */
+  /** Set an item's quantity; clamps to [1, max] or removes it at 0 or less. */
   function updateQuantity(productId: number, quantity: number) {
     setItems((current) => {
       if (quantity <= 0) {
         return current.filter((item) => item.productId !== productId);
       }
-      return current.map((item) => (item.productId === productId ? { ...item, quantity } : item));
+      return current.map((item) =>
+        item.productId === productId
+          ? { ...item, quantity: Math.min(quantity, maxQuantityFor(item.stock)) }
+          : item,
+      );
     });
   }
 
@@ -102,7 +116,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
   );
 }
 
-// eslint-disable-next-line react-refresh/only-export-components -- hook colocated with its provider.
+// eslint-disable-next-line react-refresh/only-export-components -- hook + helpers colocated with the provider.
 export function useCart(): CartContextValue {
   const context = useContext(CartContext);
   if (!context) {

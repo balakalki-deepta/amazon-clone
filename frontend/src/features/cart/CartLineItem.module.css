@@ -42,6 +42,15 @@
   color: #007600;
   font-size: 13px;
 }
+.lowStock {
+  color: #b12704;
+  font-size: 13px;
+}
+.maxNote {
+  color: var(--text-muted);
+  font-size: 12px;
+  margin-top: 4px;
+}
 
 .controls {
   display: flex;
@@ -65,8 +74,12 @@
   font-size: 18px;
   line-height: 1;
 }
-.stepper button:hover {
+.stepper button:hover:not(:disabled) {
   background: #e3e6e6;
+}
+.stepper button:disabled {
+  color: #aaa;
+  cursor: not-allowed;
 }
 .qty {
   min-width: 36px;

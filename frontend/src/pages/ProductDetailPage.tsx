@@ -35,6 +35,7 @@ export default function ProductDetailPage() {
   }
 
   const outOfStock = product.stock <= 0;
+  const lowStock = product.stock > 0 && product.stock <= 10;
 
   const handleBuyNow = () => {
     addItem(product);
@@ -96,8 +97,12 @@ export default function ProductDetailPage() {
 
         <aside className={styles.buyBox}>
           <Price price={product.price} discountPercentage={product.discountPercentage} />
-          <p className={outOfStock ? styles.outOfStock : styles.inStock}>
-            {outOfStock ? 'Currently unavailable' : 'In Stock'}
+          <p className={outOfStock || lowStock ? styles.outOfStock : styles.inStock}>
+            {outOfStock
+              ? 'Currently unavailable'
+              : lowStock
+                ? `Only ${product.stock} left in stock - order soon`
+                : 'In Stock'}
           </p>
           <button
             type="button"
