@@ -84,6 +84,26 @@ export interface OrderDetail {
   placedAt: string;
 }
 
+export interface OrderSummaryItem {
+  id: number;
+  productTitle: string;
+  quantity: number;
+  unitPrice: number;
+  lineTotal: number;
+  slug: string | null;
+  thumbnailUrl: string | null;
+}
+
+export interface OrderSummary {
+  id: number;
+  orderNumber: string;
+  status: string;
+  total: number;
+  placedAt: string;
+  itemCount: number;
+  items: OrderSummaryItem[];
+}
+
 export interface CreateOrderPayload {
   items: { productId: number; quantity: number }[];
   shippingAddress: {

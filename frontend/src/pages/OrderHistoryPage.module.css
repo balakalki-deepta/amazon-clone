@@ -1,0 +1,38 @@
+.page {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 16px;
+}
+
+.heading {
+  font-size: 28px;
+  font-weight: 400;
+  margin: 0 0 16px;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+}
+
+.error {
+  color: #b12704;
+  padding: 16px 0;
+}
+
+.empty {
+  background: #fff;
+  border-radius: 8px;
+  padding: 30px;
+}
+.emptyText {
+  margin: 0 0 10px;
+}
+.shopLink {
+  color: var(--amazon-link);
+  font-weight: 600;
+}
+.shopLink:hover {
+  color: var(--amazon-link-hover);
+  text-decoration: underline;
+}

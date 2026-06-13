@@ -95,9 +95,14 @@ export default function OrderConfirmationPage() {
         </aside>
       </div>
 
-      <Link to="/" className={styles.continue}>
-        Continue shopping
-      </Link>
+      <div className={styles.actions}>
+        <Link to="/" className={styles.continue}>
+          Continue shopping
+        </Link>
+        <Link to="/orders" className={styles.continue}>
+          View your orders
+        </Link>
+      </div>
     </div>
   );
 }

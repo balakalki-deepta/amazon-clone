@@ -3,7 +3,7 @@
  */
 
 import { apiClient } from './client';
-import type { CreateOrderPayload, OrderDetail } from '../types';
+import type { CreateOrderPayload, OrderDetail, OrderSummary } from '../types';
 
 interface Envelope<T> {
   data: T;
@@ -12,6 +12,11 @@ interface Envelope<T> {
 export async function createOrder(payload: CreateOrderPayload): Promise<OrderDetail> {
   const response = await apiClient.post<Envelope<OrderDetail>>('/orders', payload);
   return response.data.data;
+}
+
+export async function getOrders(): Promise<OrderSummary[]> {
+  const response = await apiClient.get<Envelope<{ orders: OrderSummary[] }>>('/orders');
+  return response.data.data.orders;
 }
 
 export async function getOrder(orderNumber: string): Promise<OrderDetail> {

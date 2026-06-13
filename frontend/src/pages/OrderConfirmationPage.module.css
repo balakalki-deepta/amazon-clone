@@ -102,9 +102,13 @@
   color: var(--text);
 }
 
+.actions {
+  display: flex;
+  gap: 20px;
+  margin-top: 16px;
+}
 .continue {
   display: inline-block;
-  margin-top: 16px;
   color: var(--amazon-link);
   font-weight: 600;
 }

@@ -5,6 +5,7 @@ import ProductDetailPage from './pages/ProductDetailPage';
 import CartPage from './pages/CartPage';
 import CheckoutPage from './pages/CheckoutPage';
 import OrderConfirmationPage from './pages/OrderConfirmationPage';
+import OrderHistoryPage from './pages/OrderHistoryPage';
 import NotFoundPage from './pages/NotFoundPage';
 
 /**
@@ -19,6 +20,7 @@ export default function App() {
         <Route path="/product/:slug" element={<ProductDetailPage />} />
         <Route path="/cart" element={<CartPage />} />
         <Route path="/checkout" element={<CheckoutPage />} />
+        <Route path="/orders" element={<OrderHistoryPage />} />
         <Route path="/order/:orderNumber" element={<OrderConfirmationPage />} />
         <Route path="*" element={<NotFoundPage />} />
       </Route>

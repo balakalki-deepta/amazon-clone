@@ -51,10 +51,10 @@ export default function Header() {
           <span className={styles.line2}>Account &amp; Lists</span>
         </div>
 
-        <div className={styles.orders}>
+        <Link to="/orders" className={styles.orders}>
           <span className={styles.line1}>Returns</span>
           <span className={styles.line2}>&amp; Orders</span>
-        </div>
+        </Link>
 
         <Link to="/cart" className={styles.cart} aria-label={`Cart, ${totalQuantity} items`}>
           <span className={styles.cartIconWrap}>
