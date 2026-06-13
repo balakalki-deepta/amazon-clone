@@ -1,5 +1,4 @@
-import { formatPrice } from '../utils/formatPrice';
-import styles from './Price.module.css';
+import { formatPrice } from '@/utils/formatPrice';
 
 interface PriceProps {
   price: number;
@@ -21,18 +20,22 @@ export default function Price({ price, discountPercentage = 0 }: PriceProps) {
   const listPrice = hasDeal ? price / (1 - discountPercentage / 100) : null;
 
   return (
-    <div className={styles.wrap}>
-      <div className={styles.row}>
-        {hasDeal && <span className={styles.deal}>-{Math.round(discountPercentage)}%</span>}
-        <span className={styles.price}>
-          <span className={styles.symbol}>$</span>
-          <span className={styles.whole}>{whole}</span>
-          <span className={styles.cents}>{cents}</span>
+    <div className="flex flex-col gap-0.5">
+      <div className="flex items-center gap-2">
+        {hasDeal && (
+          <span className="rounded bg-[#cc0c39] px-1.5 py-0.5 text-xs font-bold text-white">
+            -{Math.round(discountPercentage)}%
+          </span>
+        )}
+        <span className="inline-flex items-start text-amazon-ink">
+          <span className="mt-[3px] text-xs">$</span>
+          <span className="text-xl font-medium">{whole}</span>
+          <span className="mt-[3px] text-xs">{cents}</span>
         </span>
       </div>
       {listPrice !== null && (
-        <span className={styles.listLabel}>
-          List: <span className={styles.strike}>{formatPrice(listPrice)}</span>
+        <span className="text-xs text-amazon-muted">
+          List: <span className="line-through">{formatPrice(listPrice)}</span>
         </span>
       )}
     </div>

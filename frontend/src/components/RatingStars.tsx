@@ -1,5 +1,3 @@
-import styles from './RatingStars.module.css';
-
 interface RatingStarsProps {
   /** 0–5; null renders an empty row of stars. */
   rating: number | null;
@@ -14,9 +12,16 @@ export default function RatingStars({ rating }: RatingStarsProps) {
   const fillPercent = (value / 5) * 100;
 
   return (
-    <span className={styles.stars} role="img" aria-label={`${value.toFixed(1)} out of 5 stars`}>
-      <span className={styles.back}>★★★★★</span>
-      <span className={styles.front} style={{ width: `${fillPercent}%` }}>
+    <span
+      className="relative inline-block text-sm leading-none tracking-[1px]"
+      role="img"
+      aria-label={`${value.toFixed(1)} out of 5 stars`}
+    >
+      <span className="text-[#d5d9d9]">★★★★★</span>
+      <span
+        className="absolute left-0 top-0 overflow-hidden whitespace-nowrap text-amazon-star"
+        style={{ width: `${fillPercent}%` }}
+      >
         ★★★★★
       </span>
     </span>
