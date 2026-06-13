@@ -1,5 +1,5 @@
 import type { Category } from '../../types';
-import styles from './CategorySidebar.module.css';
+import { cn } from '@/lib/utils';
 
 interface CategorySidebarProps {
   categories: Category[];
@@ -8,6 +8,12 @@ interface CategorySidebarProps {
   onSelect: (slug?: string) => void;
 }
 
+const itemClass = (active: boolean) =>
+  cn(
+    'w-full rounded px-1.5 py-[5px] text-left text-sm text-amazon-ink hover:text-amazon-link-hover hover:underline',
+    active && 'font-bold text-amazon-link-hover',
+  );
+
 /** Amazon-style "Department" filter list. */
 export default function CategorySidebar({
   categories,
@@ -15,13 +21,13 @@ export default function CategorySidebar({
   onSelect,
 }: CategorySidebarProps) {
   return (
-    <aside className={styles.sidebar}>
-      <h2 className={styles.heading}>Department</h2>
-      <ul className={styles.list}>
+    <aside className="self-start rounded bg-white p-3.5">
+      <h2 className="mb-2 text-base font-bold">Department</h2>
+      <ul className="flex flex-col gap-0.5">
         <li>
           <button
             type="button"
-            className={activeCategory ? styles.link : styles.active}
+            className={itemClass(!activeCategory)}
             onClick={() => onSelect(undefined)}
           >
             All
@@ -31,10 +37,11 @@ export default function CategorySidebar({
           <li key={category.id}>
             <button
               type="button"
-              className={activeCategory === category.slug ? styles.active : styles.link}
+              className={itemClass(activeCategory === category.slug)}
               onClick={() => onSelect(category.slug)}
             >
-              {category.name} <span className={styles.count}>({category.productCount})</span>
+              {category.name}{' '}
+              <span className="text-xs text-amazon-muted">({category.productCount})</span>
             </button>
           </li>
         ))}

@@ -54,7 +54,7 @@ export default function Header() {
             value={term}
             onChange={(event) => setTerm(event.target.value)}
             aria-label="Search products"
-            className="min-w-0 flex-1 border-0 px-3 text-[15px] text-amazon-ink outline-none"
+            className="min-w-0 bg-white flex-1 border-0 px-3 text-[15px] text-amazon-ink outline-none"
           />
           <button
             type="submit"

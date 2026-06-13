@@ -5,7 +5,6 @@ import CategorySidebar from '../features/products/CategorySidebar';
 import ProductGrid from '../features/products/ProductGrid';
 import Pagination from '../components/Pagination';
 import Spinner from '../components/Spinner';
-import styles from './ProductListingPage.module.css';
 
 /**
  * Product Listing Page ("/").
@@ -42,24 +41,28 @@ export default function ProductListingPage() {
   const hasResults = data && data.products.length > 0;
 
   return (
-    <div className={styles.layout}>
+    <div className="mx-auto grid max-w-[1500px] grid-cols-1 gap-3.5 p-3.5 min-[800px]:grid-cols-[240px_1fr]">
       <CategorySidebar
         categories={categories}
         activeCategory={category}
         onSelect={(slug) => updateParam('category', slug)}
       />
 
-      <section className={styles.content}>
-        <header className={styles.resultsHeader}>
-          <h1 className={styles.title}>{search ? `Results for "${search}"` : 'All Products'}</h1>
-          {data && <span className={styles.count}>{data.pagination.total} results</span>}
+      <section className="min-h-[60vh] rounded bg-white p-3.5">
+        <header className="mb-3.5 flex items-baseline gap-2.5 border-b border-amazon-border pb-2.5">
+          <h1 className="text-[21px]">{search ? `Results for "${search}"` : 'All Products'}</h1>
+          {data && (
+            <span className="text-sm text-amazon-muted">{data.pagination.total} results</span>
+          )}
         </header>
 
         {loading && <Spinner />}
-        {error && <p className={styles.error}>{error}</p>}
+        {error && <p className="py-5 text-[#b12704]">{error}</p>}
 
         {!loading && !error && !hasResults && (
-          <p className={styles.empty}>No products found. Try a different search or category.</p>
+          <p className="py-6 text-amazon-muted">
+            No products found. Try a different search or category.
+          </p>
         )}
 
         {!loading && !error && hasResults && (
