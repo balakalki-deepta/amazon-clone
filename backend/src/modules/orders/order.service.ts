@@ -12,7 +12,21 @@ import { ApiError } from '../../utils/ApiError';
 import { DEFAULT_USER_EMAIL } from '../../config/constants';
 import * as orderRepository from './order.repository';
 import type { CreateOrderInput } from './order.schema';
-import type { OrderDetail, OrderWithItems } from './order.types';
+import type {
+  OrderDetail,
+  OrderSummary,
+  OrderWithItems,
+  OrderWithItemsAndProducts,
+} from './order.types';
+
+/** Look up the single seeded "logged-in" user. */
+async function getDefaultUser() {
+  const user = await prisma.user.findFirst({ where: { email: DEFAULT_USER_EMAIL } });
+  if (!user) {
+    throw new ApiError(500, 'Default user not found. Run the database seed.', 'NO_DEFAULT_USER');
+  }
+  return user;
+}
 
 /** Round to 2 decimal places to avoid floating-point money drift. */
 function round2(value: number): number {
@@ -57,11 +71,34 @@ function toOrderDetail(order: OrderWithItems): OrderDetail {
   };
 }
 
+function toOrderSummary(order: OrderWithItemsAndProducts): OrderSummary {
+  return {
+    id: order.id,
+    orderNumber: order.orderNumber,
+    status: order.status,
+    total: Number(order.total),
+    placedAt: order.placedAt.toISOString(),
+    itemCount: order.items.reduce((sum, item) => sum + item.quantity, 0),
+    items: order.items.map((item) => ({
+      id: item.id,
+      productTitle: item.productTitle,
+      quantity: item.quantity,
+      unitPrice: Number(item.unitPrice),
+      lineTotal: Number(item.lineTotal),
+      slug: item.product?.slug ?? null,
+      thumbnailUrl: item.product?.thumbnailUrl ?? null,
+    })),
+  };
+}
+
+export async function listOrders(): Promise<OrderSummary[]> {
+  const user = await getDefaultUser();
+  const orders = await orderRepository.findOrdersForUser(user.id);
+  return orders.map(toOrderSummary);
+}
+
 export async function createOrder(input: CreateOrderInput): Promise<OrderDetail> {
-  const user = await prisma.user.findFirst({ where: { email: DEFAULT_USER_EMAIL } });
-  if (!user) {
-    throw new ApiError(500, 'Default user not found. Run the database seed.', 'NO_DEFAULT_USER');
-  }
+  const user = await getDefaultUser();
 
   // Merge duplicate product lines so quantities are summed once. Without this,
   // the same productId sent twice could each pass the stock check individually

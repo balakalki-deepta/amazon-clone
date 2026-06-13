@@ -11,3 +11,16 @@ export async function findByOrderNumber(orderNumber: string) {
     include: { items: true },
   });
 }
+
+/** All orders for a user, newest first (uses the user_id + placed_at index). */
+export async function findOrdersForUser(userId: number) {
+  return prisma.order.findMany({
+    where: { userId },
+    orderBy: { placedAt: 'desc' },
+    include: {
+      items: {
+        include: { product: { select: { slug: true, thumbnailUrl: true } } },
+      },
+    },
+  });
+}

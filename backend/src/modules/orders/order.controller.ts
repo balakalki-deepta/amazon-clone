@@ -13,6 +13,11 @@ export async function createOrder(req: Request, res: Response): Promise<void> {
   sendSuccess(res, order, 201);
 }
 
+export async function listOrders(_req: Request, res: Response): Promise<void> {
+  const orders = await orderService.listOrders();
+  sendSuccess(res, { orders });
+}
+
 export async function getOrder(req: Request, res: Response): Promise<void> {
   const orderNumber = String(req.params.orderNumber);
   const order = await orderService.getOrderByNumber(orderNumber);
