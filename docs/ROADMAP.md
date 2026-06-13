@@ -61,10 +61,13 @@ Designed and migrated (`init` migration). Tables:
 
 ## Phase 7 — Product Detail Page ✅ (Core Feature 2)
 
-- ✅ Image carousel (thumbnail strip + main image)
+- ✅ Image carousel (thumbnail strip + main image; seed guarantees ≥2 images)
 - ✅ Description + specifications table
 - ✅ Price + stock availability status
 - ✅ Add to Cart + Buy Now (3-column Amazon layout, responsive)
+- ✅ Feature row (delivery/returns/warranty/payment) + buy-box details
+  (ships from, sold by, returns, secure payment) + delivery estimate
+- ✅ "Products related to this item" carousel (same category)
 
 ## Phase 8 — Cart state ✅
 
