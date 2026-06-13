@@ -95,6 +95,8 @@ Designed and migrated (`init` migration). Tables:
 - README finalised (setup, stack, assumptions)
 - Deploy frontend + backend + DB
 
-## Bonus (if time allows) ⬜
+## Bonus
 
-- Auth (login/signup), order history, wishlist, email on order placement.
+- ✅ **Order history** — `GET /api/orders`; `/orders` page with order cards
+  (date, total, order #, items + thumbnails), linked from the header.
+- ⬜ Auth (login/signup), wishlist, email on order placement.
