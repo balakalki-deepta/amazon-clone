@@ -176,4 +176,14 @@
   .buyBox {
     position: static;
   }
+  /* Stack order: image, then price/buy box, then the details. */
+  .galleryCol {
+    order: 1;
+  }
+  .buyBox {
+    order: 2;
+  }
+  .infoCol {
+    order: 3;
+  }
 }

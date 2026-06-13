@@ -93,11 +93,13 @@ Designed and migrated (`init` migration). Tables:
 - ✅ Place order → creates order on server, clears cart, redirects
 - ✅ Confirmation page (`/order/:orderNumber`) shows the order ID + details
 
-## Phase 12 — Polish & ship ⬜
+## Phase 12 — Polish & ship 🟨
 
-- Responsive pass (mobile/tablet/desktop)
-- README finalised (setup, stack, assumptions)
-- Deploy frontend + backend + DB
+- ✅ Responsive pass (mobile/tablet/desktop): header wraps search on phones,
+  2-col grid on phones, detail page stacks (buy box after gallery), horizontal
+  scroll rows (features/offers/related)
+- ✅ Deploy config (Render blueprint) + auto-seed
+- ⬜ README finalised (setup, stack, assumptions)
 
 ## Bonus
 

@@ -151,3 +151,21 @@
     display: none;
   }
 }
+
+/* On phones, drop the search box onto its own full-width row. */
+@media (max-width: 600px) {
+  .top {
+    flex-wrap: wrap;
+    height: auto;
+    gap: 8px;
+    padding: 8px 12px;
+  }
+  .logo {
+    font-size: 20px;
+    padding: 4px;
+  }
+  .search {
+    order: 3;
+    flex-basis: 100%;
+  }
+}
