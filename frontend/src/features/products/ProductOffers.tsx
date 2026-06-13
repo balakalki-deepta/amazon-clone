@@ -1,5 +1,3 @@
-import styles from './ProductOffers.module.css';
-
 interface Offer {
   title: string;
   text: string;
@@ -21,14 +19,17 @@ const OFFERS: Offer[] = [
 /** Amazon-style horizontal "Offers" strip (static content). */
 export default function ProductOffers() {
   return (
-    <section className={styles.offers}>
-      <h2 className={styles.heading}>Offers</h2>
-      <div className={styles.row}>
+    <section className="my-3.5">
+      <h2 className="mb-2 text-base font-semibold">Offers</h2>
+      <div className="flex gap-2.5 overflow-x-auto pb-1">
         {OFFERS.map((offer) => (
-          <div key={offer.title} className={styles.card}>
-            <span className={styles.title}>{offer.title}</span>
-            <p className={styles.text}>{offer.text}</p>
-            <span className={styles.count}>{offer.count} ›</span>
+          <div
+            key={offer.title}
+            className="flex w-[200px] flex-none flex-col gap-1 rounded-lg border border-amazon-border p-[10px_12px]"
+          >
+            <span className="text-sm font-bold">{offer.title}</span>
+            <p className="m-0 text-xs leading-snug text-amazon-ink">{offer.text}</p>
+            <span className="mt-auto text-xs text-amazon-link">{offer.count} ›</span>
           </div>
         ))}
       </div>

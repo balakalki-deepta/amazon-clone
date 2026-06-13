@@ -1,5 +1,4 @@
 import type { ReactNode } from 'react';
-import styles from './ProductFeatures.module.css';
 
 export type FeatureIconName = 'delivery' | 'returns' | 'warranty' | 'cod' | 'secure' | 'brand';
 
@@ -56,10 +55,13 @@ export default function ProductFeatures({ features }: { features: ProductFeature
     return null;
   }
   return (
-    <div className={styles.row}>
+    <div className="my-3.5 flex overflow-x-auto border-y border-amazon-border py-3.5">
       {features.map((feature) => (
-        <div key={feature.label} className={styles.feature}>
-          <span className={styles.iconWrap}>
+        <div
+          key={feature.label}
+          className="flex w-[92px] flex-none flex-col items-center gap-1.5 px-2 text-center [&+&]:border-l [&+&]:border-amazon-border"
+        >
+          <span className="flex h-[30px] items-center justify-center text-[#565959]">
             <svg
               viewBox="0 0 24 24"
               width="26"
@@ -74,7 +76,7 @@ export default function ProductFeatures({ features }: { features: ProductFeature
               {ICONS[feature.name]}
             </svg>
           </span>
-          <span className={styles.label}>{feature.label}</span>
+          <span className="text-xs leading-tight text-[#565959]">{feature.label}</span>
         </div>
       ))}
     </div>

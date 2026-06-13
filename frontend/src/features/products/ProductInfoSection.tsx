@@ -1,9 +1,11 @@
 import type { ProductDetail } from '../../types';
-import styles from './ProductInfoSection.module.css';
 
 interface ProductInfoSectionProps {
   product: ProductDetail;
 }
+
+const headingClass =
+  'mb-3 border-t border-amazon-border pt-4 text-[22px] font-semibold [&:not(:first-child)]:mt-7';
 
 /**
  * End-of-page detail block (Amazon style): a "Product description" with stacked
@@ -32,18 +34,20 @@ export default function ProductInfoSection({ product }: ProductInfoSectionProps)
   addRow('Minimum order quantity', spec('Minimum Order Quantity'));
 
   return (
-    <section className={styles.section}>
+    <section className="mt-2">
       {product.description && (
         <>
-          <h2 className={styles.heading}>Product description</h2>
-          <p className={styles.description}>{product.description}</p>
-          <div className={styles.images}>
+          <h2 className={headingClass}>Product description</h2>
+          <p className="max-w-[800px] text-sm leading-[1.7] text-amazon-ink">
+            {product.description}
+          </p>
+          <div className="mt-4 flex flex-col items-center gap-5">
             {uniqueImages.map((url, index) => (
               <img
                 key={url}
                 src={url}
                 alt={`${product.title} — view ${index + 1}`}
-                className={styles.image}
+                className="w-full max-w-[600px] object-contain"
                 loading="lazy"
               />
             ))}
@@ -53,13 +57,17 @@ export default function ProductInfoSection({ product }: ProductInfoSectionProps)
 
       {rows.length > 0 && (
         <>
-          <h2 className={styles.heading}>Product information</h2>
-          <table className={styles.table}>
+          <h2 className={headingClass}>Product information</h2>
+          <table className="w-full max-w-[800px] border-collapse text-sm">
             <tbody>
               {rows.map((row) => (
                 <tr key={row.label}>
-                  <th>{row.label}</th>
-                  <td>{row.value}</td>
+                  <th className="w-[35%] border-b border-amazon-border bg-[#f7f8f8] px-3 py-[9px] text-left align-top font-semibold text-amazon-muted">
+                    {row.label}
+                  </th>
+                  <td className="border-b border-amazon-border px-3 py-[9px] text-left align-top">
+                    {row.value}
+                  </td>
                 </tr>
               ))}
             </tbody>

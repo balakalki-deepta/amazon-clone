@@ -11,13 +11,13 @@ import ProductOffers from '../features/products/ProductOffers';
 import ProductInfoSection from '../features/products/ProductInfoSection';
 import RelatedProducts from '../features/products/RelatedProducts';
 import { formatDate } from '../utils/formatDate';
-import styles from './ProductDetailPage.module.css';
+import { Button } from '@/components/ui/button';
 
 /**
  * Product Detail Page ("/product/:slug").
  *
  * Three columns (Amazon layout): image gallery, product info, and a buy box.
- * Collapses to a single column on small screens.
+ * Collapses to a single column on small screens (image → buy box → details).
  */
 export default function ProductDetailPage() {
   const { slug } = useParams();
@@ -31,9 +31,9 @@ export default function ProductDetailPage() {
 
   if (error || !product) {
     return (
-      <div className={styles.notFound}>
-        <h1>Product not found</h1>
-        <Link to="/" className={styles.backLink}>
+      <div className="px-4 py-[60px] text-center">
+        <h1 className="text-2xl font-semibold">Product not found</h1>
+        <Link to="/" className="font-semibold text-amazon-link">
           Back to products
         </Link>
       </div>
@@ -84,10 +84,10 @@ export default function ProductDetailPage() {
   const deliveryDate = formatDate(new Date(Date.now() + 4 * 24 * 60 * 60 * 1000).toISOString());
 
   return (
-    <div className={styles.page}>
-      <div className={styles.inner}>
-        <div className={styles.grid}>
-          <div className={styles.galleryCol}>
+    <div className="bg-white">
+      <div className="mx-auto max-w-[1400px] p-4">
+        <div className="grid grid-cols-[minmax(320px,1fr)_1.4fr_280px] gap-6 max-[1000px]:grid-cols-1">
+          <div className="sticky top-[120px] self-start max-[1000px]:static max-[1000px]:order-1">
             <ImageCarousel
               images={product.images}
               title={product.title}
@@ -95,21 +95,28 @@ export default function ProductDetailPage() {
             />
           </div>
 
-          <div className={styles.infoCol}>
-            <nav className={styles.breadcrumb}>
-              <Link to={`/?category=${product.category.slug}`}>{product.category.name}</Link>
+          <div className="max-[1000px]:order-3">
+            <nav className="mb-1.5 text-xs text-amazon-muted">
+              <Link
+                to={`/?category=${product.category.slug}`}
+                className="hover:text-amazon-link-hover hover:underline"
+              >
+                {product.category.name}
+              </Link>
             </nav>
-            <h1 className={styles.title}>{product.title}</h1>
-            {product.brand && <p className={styles.brand}>Brand: {product.brand}</p>}
+            <h1 className="mb-1.5 text-2xl font-medium leading-tight">{product.title}</h1>
+            {product.brand && (
+              <p className="mb-2 text-sm text-amazon-link">Brand: {product.brand}</p>
+            )}
 
             {product.rating !== null && (
-              <div className={styles.rating}>
+              <div className="flex items-center gap-1.5">
                 <RatingStars rating={product.rating} />
-                <span className={styles.ratingValue}>{product.rating.toFixed(1)}</span>
+                <span className="text-sm text-amazon-link">{product.rating.toFixed(1)}</span>
               </div>
             )}
 
-            <hr className={styles.divider} />
+            <hr className="my-3.5 border-0 border-t border-amazon-border" />
             <Price price={product.price} discountPercentage={product.discountPercentage} />
 
             <ProductOffers />
@@ -118,8 +125,8 @@ export default function ProductDetailPage() {
 
             {aboutBullets.length > 0 && (
               <>
-                <h2 className={styles.sectionHeading}>About this item</h2>
-                <ul className={styles.aboutList}>
+                <h2 className="mb-2 mt-4 text-lg font-semibold">About this item</h2>
+                <ul className="m-0 list-disc pl-5 text-sm leading-[1.7] text-amazon-ink [&_li]:mb-1">
                   {aboutBullets.map((point) => (
                     <li key={point}>{point}</li>
                   ))}
@@ -128,56 +135,62 @@ export default function ProductDetailPage() {
             )}
           </div>
 
-          <aside className={styles.buyBox}>
+          <aside className="sticky top-[120px] flex flex-col gap-3 self-start rounded-lg border border-amazon-border p-4 max-[1000px]:static max-[1000px]:order-2">
             <Price price={product.price} discountPercentage={product.discountPercentage} />
             {!outOfStock && (
-              <p className={styles.delivery}>
+              <p className="m-0 text-sm">
                 🚚 FREE delivery <strong>{deliveryDate}</strong>
               </p>
             )}
-            <p className={outOfStock || lowStock ? styles.outOfStock : styles.inStock}>
+            <p
+              className={
+                outOfStock || lowStock
+                  ? 'm-0 text-base text-[#b12704]'
+                  : 'm-0 text-base text-[#007600]'
+              }
+            >
               {outOfStock
                 ? 'Currently unavailable'
                 : lowStock
                   ? `Only ${product.stock} left in stock - order soon`
                   : 'In Stock'}
             </p>
-            <button
+            <Button
               type="button"
-              className={styles.addButton}
               onClick={() => addItem(product)}
               disabled={outOfStock}
+              className="rounded-full border border-[#fcd200] bg-amazon-yellow text-amazon-ink hover:bg-amazon-yellow-hover"
             >
               Add to Cart
-            </button>
-            <button
+            </Button>
+            <Button
               type="button"
-              className={styles.buyButton}
               onClick={handleBuyNow}
               disabled={outOfStock}
+              className="rounded-full border border-[#e88a00] bg-amazon-orange text-amazon-ink hover:bg-[#f08804]"
             >
               Buy Now
-            </button>
+            </Button>
             <WishlistButton product={product} variant="full" />
 
-            <dl className={styles.buyMeta}>
-              <div>
-                <dt>Ships from</dt>
-                <dd>Amazon Clone</dd>
+            <dl className="mt-1 flex flex-col gap-1.5 border-t border-amazon-border pt-3 text-[13px]">
+              <div className="flex justify-between gap-3">
+                <dt className="text-amazon-muted">Ships from</dt>
+                <dd className="m-0 text-right">Amazon Clone</dd>
               </div>
-              <div>
-                <dt>Sold by</dt>
-                <dd>Amazon Clone</dd>
+              <div className="flex justify-between gap-3">
+                <dt className="text-amazon-muted">Sold by</dt>
+                <dd className="m-0 text-right">Amazon Clone</dd>
               </div>
               {returnPolicy && (
-                <div>
-                  <dt>Returns</dt>
-                  <dd>{returnPolicy}</dd>
+                <div className="flex justify-between gap-3">
+                  <dt className="text-amazon-muted">Returns</dt>
+                  <dd className="m-0 text-right">{returnPolicy}</dd>
                 </div>
               )}
-              <div>
-                <dt>Payment</dt>
-                <dd>Secure transaction</dd>
+              <div className="flex justify-between gap-3">
+                <dt className="text-amazon-muted">Payment</dt>
+                <dd className="m-0 text-right">Secure transaction</dd>
               </div>
             </dl>
           </aside>

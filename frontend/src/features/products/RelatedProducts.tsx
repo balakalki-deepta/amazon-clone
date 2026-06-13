@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { getProducts } from '../../api/products';
 import type { Product } from '../../types';
 import ProductCard from '../../components/ProductCard';
-import styles from './RelatedProducts.module.css';
+import { Button } from '@/components/ui/button';
 
 interface RelatedProductsProps {
   categorySlug: string;
@@ -36,32 +36,41 @@ export default function RelatedProducts({ categorySlug, excludeId }: RelatedProd
     trackRef.current?.scrollBy({ left: amount, behavior: 'smooth' });
 
   return (
-    <section className={styles.section}>
-      <h2 className={styles.heading}>Products related to this item</h2>
-      <div className={styles.carousel}>
-        <button
+    <section className="mt-2">
+      <h2 className="mb-3.5 border-t border-amazon-border pt-4 text-xl font-semibold">
+        Products related to this item
+      </h2>
+      <div className="flex items-center gap-2">
+        <Button
           type="button"
-          className={styles.navLeft}
+          variant="outline"
+          size="icon"
+          className="flex-none rounded-full text-xl"
           aria-label="Scroll left"
           onClick={() => scrollByAmount(-600)}
         >
           ‹
-        </button>
-        <div className={styles.track} ref={trackRef}>
+        </Button>
+        <div
+          ref={trackRef}
+          className="flex min-w-0 flex-1 gap-3.5 overflow-x-auto scroll-smooth pb-1.5"
+        >
           {products.map((product) => (
-            <div key={product.id} className={styles.item}>
+            <div key={product.id} className="w-[200px] flex-none max-[520px]:w-[150px]">
               <ProductCard product={product} />
             </div>
           ))}
         </div>
-        <button
+        <Button
           type="button"
-          className={styles.navRight}
+          variant="outline"
+          size="icon"
+          className="flex-none rounded-full text-xl"
           aria-label="Scroll right"
           onClick={() => scrollByAmount(600)}
         >
           ›
-        </button>
+        </Button>
       </div>
     </section>
   );
