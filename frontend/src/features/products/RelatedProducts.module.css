@@ -1,9 +1,5 @@
 .section {
-  max-width: 1400px;
-  margin: 16px auto 0;
-  padding: 16px;
-  background: #fff;
-  border-radius: 8px;
+  margin-top: 8px;
 }
 
 .heading {
@@ -13,16 +9,21 @@
   border-top: 1px solid var(--border);
 }
 
+/* Buttons sit beside the track (not over it), so products never overlap them. */
 .carousel {
-  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .track {
+  flex: 1;
   display: flex;
   gap: 14px;
   overflow-x: auto;
   scroll-behavior: smooth;
   padding-bottom: 6px;
+  min-width: 0;
 }
 
 .item {
@@ -32,25 +33,20 @@
 
 .navLeft,
 .navRight {
-  position: absolute;
-  top: 0;
-  bottom: 6px;
+  flex: 0 0 auto;
   width: 36px;
-  z-index: 2;
+  height: 36px;
+  border-radius: 50%;
   border: 1px solid var(--border);
-  background: rgba(255, 255, 255, 0.92);
-  font-size: 24px;
+  background: #fff;
+  font-size: 22px;
+  line-height: 1;
   display: flex;
   align-items: center;
   justify-content: center;
+  box-shadow: 0 1px 4px rgba(15, 17, 17, 0.15);
 }
 .navLeft:hover,
 .navRight:hover {
   background: #f0f2f2;
-}
-.navLeft {
-  left: -6px;
-}
-.navRight {
-  right: -6px;
 }

@@ -85,106 +85,108 @@ export default function ProductDetailPage() {
 
   return (
     <div className={styles.page}>
-      <div className={styles.grid}>
-        <div className={styles.galleryCol}>
-          <ImageCarousel
-            images={product.images}
-            title={product.title}
-            fallback={product.thumbnailUrl}
-          />
-        </div>
+      <div className={styles.inner}>
+        <div className={styles.grid}>
+          <div className={styles.galleryCol}>
+            <ImageCarousel
+              images={product.images}
+              title={product.title}
+              fallback={product.thumbnailUrl}
+            />
+          </div>
 
-        <div className={styles.infoCol}>
-          <nav className={styles.breadcrumb}>
-            <Link to={`/?category=${product.category.slug}`}>{product.category.name}</Link>
-          </nav>
-          <h1 className={styles.title}>{product.title}</h1>
-          {product.brand && <p className={styles.brand}>Brand: {product.brand}</p>}
+          <div className={styles.infoCol}>
+            <nav className={styles.breadcrumb}>
+              <Link to={`/?category=${product.category.slug}`}>{product.category.name}</Link>
+            </nav>
+            <h1 className={styles.title}>{product.title}</h1>
+            {product.brand && <p className={styles.brand}>Brand: {product.brand}</p>}
 
-          {product.rating !== null && (
-            <div className={styles.rating}>
-              <RatingStars rating={product.rating} />
-              <span className={styles.ratingValue}>{product.rating.toFixed(1)}</span>
-            </div>
-          )}
-
-          <hr className={styles.divider} />
-          <Price price={product.price} discountPercentage={product.discountPercentage} />
-
-          <ProductOffers />
-
-          <ProductFeatures features={features} />
-
-          {aboutBullets.length > 0 && (
-            <>
-              <h2 className={styles.sectionHeading}>About this item</h2>
-              <ul className={styles.aboutList}>
-                {aboutBullets.map((point) => (
-                  <li key={point}>{point}</li>
-                ))}
-              </ul>
-            </>
-          )}
-        </div>
-
-        <aside className={styles.buyBox}>
-          <Price price={product.price} discountPercentage={product.discountPercentage} />
-          {!outOfStock && (
-            <p className={styles.delivery}>
-              🚚 FREE delivery <strong>{deliveryDate}</strong>
-            </p>
-          )}
-          <p className={outOfStock || lowStock ? styles.outOfStock : styles.inStock}>
-            {outOfStock
-              ? 'Currently unavailable'
-              : lowStock
-                ? `Only ${product.stock} left in stock - order soon`
-                : 'In Stock'}
-          </p>
-          <button
-            type="button"
-            className={styles.addButton}
-            onClick={() => addItem(product)}
-            disabled={outOfStock}
-          >
-            Add to Cart
-          </button>
-          <button
-            type="button"
-            className={styles.buyButton}
-            onClick={handleBuyNow}
-            disabled={outOfStock}
-          >
-            Buy Now
-          </button>
-          <WishlistButton product={product} variant="full" />
-
-          <dl className={styles.buyMeta}>
-            <div>
-              <dt>Ships from</dt>
-              <dd>Amazon Clone</dd>
-            </div>
-            <div>
-              <dt>Sold by</dt>
-              <dd>Amazon Clone</dd>
-            </div>
-            {returnPolicy && (
-              <div>
-                <dt>Returns</dt>
-                <dd>{returnPolicy}</dd>
+            {product.rating !== null && (
+              <div className={styles.rating}>
+                <RatingStars rating={product.rating} />
+                <span className={styles.ratingValue}>{product.rating.toFixed(1)}</span>
               </div>
             )}
-            <div>
-              <dt>Payment</dt>
-              <dd>Secure transaction</dd>
-            </div>
-          </dl>
-        </aside>
+
+            <hr className={styles.divider} />
+            <Price price={product.price} discountPercentage={product.discountPercentage} />
+
+            <ProductOffers />
+
+            <ProductFeatures features={features} />
+
+            {aboutBullets.length > 0 && (
+              <>
+                <h2 className={styles.sectionHeading}>About this item</h2>
+                <ul className={styles.aboutList}>
+                  {aboutBullets.map((point) => (
+                    <li key={point}>{point}</li>
+                  ))}
+                </ul>
+              </>
+            )}
+          </div>
+
+          <aside className={styles.buyBox}>
+            <Price price={product.price} discountPercentage={product.discountPercentage} />
+            {!outOfStock && (
+              <p className={styles.delivery}>
+                🚚 FREE delivery <strong>{deliveryDate}</strong>
+              </p>
+            )}
+            <p className={outOfStock || lowStock ? styles.outOfStock : styles.inStock}>
+              {outOfStock
+                ? 'Currently unavailable'
+                : lowStock
+                  ? `Only ${product.stock} left in stock - order soon`
+                  : 'In Stock'}
+            </p>
+            <button
+              type="button"
+              className={styles.addButton}
+              onClick={() => addItem(product)}
+              disabled={outOfStock}
+            >
+              Add to Cart
+            </button>
+            <button
+              type="button"
+              className={styles.buyButton}
+              onClick={handleBuyNow}
+              disabled={outOfStock}
+            >
+              Buy Now
+            </button>
+            <WishlistButton product={product} variant="full" />
+
+            <dl className={styles.buyMeta}>
+              <div>
+                <dt>Ships from</dt>
+                <dd>Amazon Clone</dd>
+              </div>
+              <div>
+                <dt>Sold by</dt>
+                <dd>Amazon Clone</dd>
+              </div>
+              {returnPolicy && (
+                <div>
+                  <dt>Returns</dt>
+                  <dd>{returnPolicy}</dd>
+                </div>
+              )}
+              <div>
+                <dt>Payment</dt>
+                <dd>Secure transaction</dd>
+              </div>
+            </dl>
+          </aside>
+        </div>
+
+        <ProductInfoSection product={product} />
+
+        <RelatedProducts categorySlug={product.category.slug} excludeId={product.id} />
       </div>
-
-      <ProductInfoSection product={product} />
-
-      <RelatedProducts categorySlug={product.category.slug} excludeId={product.id} />
     </div>
   );
 }

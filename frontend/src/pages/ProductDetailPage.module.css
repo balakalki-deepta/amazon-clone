@@ -1,17 +1,19 @@
+/* Full-width white background for the whole detail page. */
 .page {
+  background: #fff;
+}
+
+/* Centered content column with side spacing. */
+.inner {
   max-width: 1400px;
   margin: 0 auto;
   padding: 16px;
-  background: #fff;
 }
 
 .grid {
   display: grid;
   grid-template-columns: minmax(320px, 1fr) 1.4fr 280px;
   gap: 24px;
-  background: #fff;
-  border-radius: 8px;
-  padding: 20px;
 }
 
 .galleryCol {

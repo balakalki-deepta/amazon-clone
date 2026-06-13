@@ -1,9 +1,5 @@
 .section {
-  max-width: 1400px;
-  margin: 16px auto 0;
-  padding: 24px;
-  background: #fff;
-  border-radius: 8px;
+  margin-top: 8px;
 }
 
 .heading {
