@@ -121,13 +121,3 @@ button {
   font-family: inherit;
   cursor: pointer;
 }
-
-.app-shell {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-}
-.app-main {
-  flex: 1;
-  background: var(--amazon-bg);
-}

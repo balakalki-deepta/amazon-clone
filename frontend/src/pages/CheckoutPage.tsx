@@ -1,10 +1,12 @@
-import { useState, type ChangeEvent, type FormEvent } from 'react';
+import { useState, type ChangeEvent, type ComponentProps, type FormEvent } from 'react';
 import { Navigate, useNavigate } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import { createOrder } from '../api/orders';
 import { getApiErrorMessage } from '../api/errorMessage';
 import { formatPrice } from '../utils/formatPrice';
-import styles from './CheckoutPage.module.css';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 
 interface AddressFormValues {
   fullName: string;
@@ -27,6 +29,18 @@ const EMPTY_ADDRESS: AddressFormValues = {
   postalCode: '',
   country: 'India',
 };
+
+/** A labelled shadcn input for the address form. */
+function Field({ id, label, ...props }: { id: string; label: string } & ComponentProps<'input'>) {
+  return (
+    <div className="mb-3.5 flex-1">
+      <Label htmlFor={id} className="mb-1 block text-[13px] font-bold">
+        {label}
+      </Label>
+      <Input id={id} {...props} />
+    </div>
+  );
+}
 
 /**
  * Checkout page ("/checkout"): shipping address form + order review.
@@ -83,155 +97,115 @@ export default function CheckoutPage() {
   }
 
   return (
-    <form className={styles.page} onSubmit={handleSubmit}>
-      <div className={styles.layout}>
-        <section className={styles.formPanel}>
-          <h1 className={styles.heading}>Shipping address</h1>
+    <form className="mx-auto max-w-[1200px] p-4" onSubmit={handleSubmit}>
+      <div className="grid grid-cols-1 items-start gap-4 min-[800px]:grid-cols-[1fr_340px]">
+        <section className="rounded-lg bg-white p-5">
+          <h1 className="mb-4 text-[21px] font-semibold">Shipping address</h1>
 
-          <div className={styles.field}>
-            <label className={styles.label} htmlFor="fullName">
-              Full name
-            </label>
-            <input
-              id="fullName"
-              name="fullName"
-              className={styles.input}
-              value={address.fullName}
+          <Field
+            id="fullName"
+            label="Full name"
+            name="fullName"
+            value={address.fullName}
+            onChange={handleChange}
+            required
+          />
+          <Field
+            id="phone"
+            label="Phone number"
+            name="phone"
+            value={address.phone}
+            onChange={handleChange}
+            required
+          />
+          <Field
+            id="line1"
+            label="Address line 1"
+            name="line1"
+            value={address.line1}
+            onChange={handleChange}
+            required
+          />
+          <Field
+            id="line2"
+            label="Address line 2 (optional)"
+            name="line2"
+            value={address.line2}
+            onChange={handleChange}
+          />
+
+          <div className="flex gap-3">
+            <Field
+              id="city"
+              label="City"
+              name="city"
+              value={address.city}
+              onChange={handleChange}
+              required
+            />
+            <Field
+              id="state"
+              label="State"
+              name="state"
+              value={address.state}
               onChange={handleChange}
               required
             />
           </div>
-
-          <div className={styles.field}>
-            <label className={styles.label} htmlFor="phone">
-              Phone number
-            </label>
-            <input
-              id="phone"
-              name="phone"
-              className={styles.input}
-              value={address.phone}
+          <div className="flex gap-3">
+            <Field
+              id="postalCode"
+              label="Postal code"
+              name="postalCode"
+              value={address.postalCode}
               onChange={handleChange}
               required
             />
-          </div>
-
-          <div className={styles.field}>
-            <label className={styles.label} htmlFor="line1">
-              Address line 1
-            </label>
-            <input
-              id="line1"
-              name="line1"
-              className={styles.input}
-              value={address.line1}
+            <Field
+              id="country"
+              label="Country"
+              name="country"
+              value={address.country}
               onChange={handleChange}
               required
             />
-          </div>
-
-          <div className={styles.field}>
-            <label className={styles.label} htmlFor="line2">
-              Address line 2 (optional)
-            </label>
-            <input
-              id="line2"
-              name="line2"
-              className={styles.input}
-              value={address.line2}
-              onChange={handleChange}
-            />
-          </div>
-
-          <div className={styles.row}>
-            <div className={styles.field}>
-              <label className={styles.label} htmlFor="city">
-                City
-              </label>
-              <input
-                id="city"
-                name="city"
-                className={styles.input}
-                value={address.city}
-                onChange={handleChange}
-                required
-              />
-            </div>
-            <div className={styles.field}>
-              <label className={styles.label} htmlFor="state">
-                State
-              </label>
-              <input
-                id="state"
-                name="state"
-                className={styles.input}
-                value={address.state}
-                onChange={handleChange}
-                required
-              />
-            </div>
-          </div>
-
-          <div className={styles.row}>
-            <div className={styles.field}>
-              <label className={styles.label} htmlFor="postalCode">
-                Postal code
-              </label>
-              <input
-                id="postalCode"
-                name="postalCode"
-                className={styles.input}
-                value={address.postalCode}
-                onChange={handleChange}
-                required
-              />
-            </div>
-            <div className={styles.field}>
-              <label className={styles.label} htmlFor="country">
-                Country
-              </label>
-              <input
-                id="country"
-                name="country"
-                className={styles.input}
-                value={address.country}
-                onChange={handleChange}
-                required
-              />
-            </div>
           </div>
         </section>
 
-        <aside className={styles.summary}>
-          <h2 className={styles.summaryHeading}>Order summary</h2>
+        <aside className="sticky top-[120px] rounded-lg bg-white p-[18px] max-[800px]:static">
+          <h2 className="mb-3 text-lg font-semibold">Order summary</h2>
 
-          <ul className={styles.reviewList}>
+          <ul className="mb-3 flex max-h-[260px] list-none flex-col gap-2 overflow-y-auto p-0">
             {items.map((item) => (
-              <li key={item.productId} className={styles.reviewItem}>
-                <span className={styles.reviewTitle}>
-                  {item.title} <span className={styles.reviewQty}>× {item.quantity}</span>
+              <li key={item.productId} className="flex justify-between gap-2.5 text-[13px]">
+                <span className="text-amazon-ink">
+                  {item.title} <span className="text-amazon-muted">× {item.quantity}</span>
                 </span>
                 <span>{formatPrice(item.price * item.quantity)}</span>
               </li>
             ))}
           </ul>
 
-          <div className={styles.summaryRow}>
+          <div className="flex justify-between border-t border-amazon-border py-2 text-sm">
             <span>
               Subtotal ({totalQuantity} {itemNoun})
             </span>
             <span>{formatPrice(subtotal)}</span>
           </div>
-          <div className={styles.summaryTotal}>
+          <div className="flex justify-between border-t border-amazon-border py-2 pb-3.5 text-lg font-bold text-[#b12704]">
             <span>Order total</span>
             <span>{formatPrice(subtotal)}</span>
           </div>
 
-          {error && <p className={styles.error}>{error}</p>}
+          {error && <p className="m-0 mb-2.5 text-[13px] text-[#b12704]">{error}</p>}
 
-          <button type="submit" className={styles.placeButton} disabled={submitting}>
+          <Button
+            type="submit"
+            disabled={submitting}
+            className="w-full rounded-full border border-[#fcd200] bg-amazon-yellow text-amazon-ink hover:bg-amazon-yellow-hover"
+          >
             {submitting ? 'Placing order…' : 'Place order'}
-          </button>
+          </Button>
         </aside>
       </div>
     </form>

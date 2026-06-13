@@ -9,9 +9,9 @@ import Footer from './Footer';
  */
 export default function Layout() {
   return (
-    <div className="app-shell">
+    <div className="flex min-h-screen flex-col">
       <Header />
-      <main className="app-main">
+      <main className="flex-1 bg-amazon-bg">
         <Outlet />
       </main>
       <Footer />

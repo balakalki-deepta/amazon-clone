@@ -2,7 +2,6 @@ import { Link, useParams } from 'react-router-dom';
 import { useOrder } from '../features/orders/useOrder';
 import { formatPrice } from '../utils/formatPrice';
 import Spinner from '../components/Spinner';
-import styles from './OrderConfirmationPage.module.css';
 
 /**
  * Order Confirmation page ("/order/:orderNumber").
@@ -20,10 +19,10 @@ export default function OrderConfirmationPage() {
 
   if (error || !order) {
     return (
-      <div className={styles.page}>
-        <div className={styles.notFound}>
-          <h1>Order not found</h1>
-          <Link to="/" className={styles.shopLink}>
+      <div className="mx-auto max-w-[1000px] p-4">
+        <div className="rounded-lg bg-white p-10 text-center">
+          <h1 className="text-xl font-semibold">Order not found</h1>
+          <Link to="/" className="text-amazon-link">
             Continue shopping
           </Link>
         </div>
@@ -34,48 +33,52 @@ export default function OrderConfirmationPage() {
   const address = order.shippingAddress;
 
   return (
-    <div className={styles.page}>
-      <div className={styles.banner}>
-        <span className={styles.check}>✓</span>
+    <div className="mx-auto max-w-[1000px] p-4 max-[600px]:p-3">
+      <div className="mb-4 flex items-center gap-4 rounded-lg border border-[#007600] bg-white p-5 max-[600px]:p-4">
+        <span className="flex h-10 w-10 flex-none items-center justify-center rounded-full bg-[#007600] text-[22px] text-white">
+          ✓
+        </span>
         <div>
-          <h1 className={styles.bannerTitle}>Thank you, your order is placed!</h1>
-          <p className={styles.bannerSub}>
-            Order ID: <strong className={styles.orderId}>{order.orderNumber}</strong>
+          <h1 className="mb-1 text-[22px] font-semibold text-[#007600] max-[600px]:text-lg">
+            Thank you, your order is placed!
+          </h1>
+          <p className="m-0 text-[15px]">
+            Order ID: <strong className="font-mono text-base">{order.orderNumber}</strong>
           </p>
         </div>
       </div>
 
-      <div className={styles.layout}>
-        <section className={styles.panel}>
-          <h2 className={styles.sectionHeading}>Order details</h2>
-          <ul className={styles.items}>
+      <div className="grid grid-cols-1 items-start gap-4 min-[800px]:grid-cols-[1fr_320px]">
+        <section className="rounded-lg bg-white p-5">
+          <h2 className="mb-3.5 text-lg font-semibold">Order details</h2>
+          <ul className="mb-3 flex list-none flex-col gap-2.5 p-0">
             {order.items.map((item) => (
-              <li key={item.id} className={styles.item}>
-                <span className={styles.itemTitle}>
-                  {item.productTitle} <span className={styles.itemQty}>× {item.quantity}</span>
+              <li key={item.id} className="flex justify-between gap-2.5 text-sm">
+                <span className="text-amazon-ink">
+                  {item.productTitle} <span className="text-amazon-muted">× {item.quantity}</span>
                 </span>
                 <span>{formatPrice(item.lineTotal)}</span>
               </li>
             ))}
           </ul>
 
-          <div className={styles.totalsRow}>
+          <div className="flex justify-between border-t border-amazon-border py-1.5 text-sm">
             <span>Subtotal</span>
             <span>{formatPrice(order.subtotal)}</span>
           </div>
-          <div className={styles.totalsRow}>
+          <div className="flex justify-between border-t border-amazon-border py-1.5 text-sm">
             <span>Shipping</span>
             <span>{formatPrice(order.shippingFee)}</span>
           </div>
-          <div className={styles.grandTotal}>
+          <div className="flex justify-between border-t border-amazon-border py-2 text-lg font-bold text-[#b12704]">
             <span>Order total</span>
             <span>{formatPrice(order.total)}</span>
           </div>
         </section>
 
-        <aside className={styles.panel}>
-          <h2 className={styles.sectionHeading}>Shipping to</h2>
-          <address className={styles.address}>
+        <aside className="rounded-lg bg-white p-5">
+          <h2 className="mb-3.5 text-lg font-semibold">Shipping to</h2>
+          <address className="text-sm not-italic leading-[1.7] text-amazon-ink">
             {address.fullName}
             <br />
             {address.line1}
@@ -95,11 +98,17 @@ export default function OrderConfirmationPage() {
         </aside>
       </div>
 
-      <div className={styles.actions}>
-        <Link to="/" className={styles.continue}>
+      <div className="mt-4 flex flex-wrap gap-5">
+        <Link
+          to="/"
+          className="font-semibold text-amazon-link hover:text-amazon-link-hover hover:underline"
+        >
           Continue shopping
         </Link>
-        <Link to="/orders" className={styles.continue}>
+        <Link
+          to="/orders"
+          className="font-semibold text-amazon-link hover:text-amazon-link-hover hover:underline"
+        >
           View your orders
         </Link>
       </div>
