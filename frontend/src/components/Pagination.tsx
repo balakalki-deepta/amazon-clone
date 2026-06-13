@@ -1,4 +1,4 @@
-import styles from './Pagination.module.css';
+import { Button } from '@/components/ui/button';
 
 interface PaginationProps {
   page: number;
@@ -13,26 +13,20 @@ export default function Pagination({ page, totalPages, onPageChange }: Paginatio
   }
 
   return (
-    <nav className={styles.pagination} aria-label="Pagination">
-      <button
-        type="button"
-        className={styles.button}
-        disabled={page <= 1}
-        onClick={() => onPageChange(page - 1)}
-      >
+    <nav className="flex items-center justify-center gap-4 pb-2 pt-6" aria-label="Pagination">
+      <Button variant="outline" disabled={page <= 1} onClick={() => onPageChange(page - 1)}>
         ‹ Previous
-      </button>
-      <span className={styles.status}>
+      </Button>
+      <span className="text-sm text-amazon-muted">
         Page {page} of {totalPages}
       </span>
-      <button
-        type="button"
-        className={styles.button}
+      <Button
+        variant="outline"
         disabled={page >= totalPages}
         onClick={() => onPageChange(page + 1)}
       >
         Next ›
-      </button>
+      </Button>
     </nav>
   );
 }

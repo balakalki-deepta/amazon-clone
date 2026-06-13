@@ -1,6 +1,7 @@
 import { useWishlist } from '../context/WishlistContext';
 import type { Product } from '../types';
-import styles from './WishlistButton.module.css';
+import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
 
 interface WishlistButtonProps {
   product: Product;
@@ -12,17 +13,36 @@ interface WishlistButtonProps {
 export default function WishlistButton({ product, variant = 'icon' }: WishlistButtonProps) {
   const { has, toggle } = useWishlist();
   const saved = has(product.id);
+  const heartColor = saved ? 'text-[#cc0c39]' : 'text-amazon-muted';
+  const label = saved ? 'Remove from wishlist' : 'Add to wishlist';
+
+  if (variant === 'full') {
+    return (
+      <Button
+        type="button"
+        variant="outline"
+        className="w-full gap-2"
+        aria-pressed={saved}
+        aria-label={label}
+        onClick={() => toggle(product)}
+      >
+        <span className={cn('text-base leading-none', heartColor)}>{saved ? '♥' : '♡'}</span>
+        {saved ? 'In Wishlist' : 'Add to Wishlist'}
+      </Button>
+    );
+  }
 
   return (
-    <button
+    <Button
       type="button"
-      className={variant === 'full' ? styles.full : styles.icon}
+      variant="outline"
+      size="icon"
+      className="absolute right-2.5 top-2.5 z-[2] rounded-full bg-white shadow-sm"
       aria-pressed={saved}
-      aria-label={saved ? 'Remove from wishlist' : 'Add to wishlist'}
+      aria-label={label}
       onClick={() => toggle(product)}
     >
-      <span className={saved ? styles.heartFilled : styles.heart}>{saved ? '♥' : '♡'}</span>
-      {variant === 'full' && <span>{saved ? 'In Wishlist' : 'Add to Wishlist'}</span>}
-    </button>
+      <span className={cn('text-lg leading-none', heartColor)}>{saved ? '♥' : '♡'}</span>
+    </Button>
   );
 }

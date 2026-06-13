@@ -4,7 +4,8 @@ import { useCart } from '../context/CartContext';
 import RatingStars from './RatingStars';
 import Price from './Price';
 import WishlistButton from './WishlistButton';
-import styles from './ProductCard.module.css';
+import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
 
 interface ProductCardProps {
   product: Product;
@@ -20,49 +21,50 @@ export default function ProductCard({ product }: ProductCardProps) {
   const detailUrl = `/product/${product.slug}`;
 
   return (
-    <article className={styles.card}>
+    <Card className="relative gap-2 rounded-lg p-3.5 transition-shadow hover:shadow-md">
       <WishlistButton product={product} />
 
-      <Link to={detailUrl} className={styles.imageWrap}>
+      <Link to={detailUrl} className="flex h-[200px] items-center justify-center">
         {product.thumbnailUrl ? (
           <img
             src={product.thumbnailUrl}
             alt={product.title}
-            className={styles.image}
+            className="max-h-full max-w-full object-contain"
             loading="lazy"
           />
         ) : (
-          <div className={styles.noImage}>No image</div>
+          <div className="text-sm text-amazon-muted">No image</div>
         )}
       </Link>
 
-      <div className={styles.body}>
-        <Link to={detailUrl} className={styles.title}>
-          {product.title}
-        </Link>
+      <Link
+        to={detailUrl}
+        className="line-clamp-2 min-h-[39px] text-[15px] leading-tight text-amazon-link hover:text-amazon-link-hover hover:underline"
+      >
+        {product.title}
+      </Link>
 
-        {product.rating !== null && (
-          <div className={styles.rating}>
-            <RatingStars rating={product.rating} />
-            <span className={styles.ratingValue}>{product.rating.toFixed(1)}</span>
-          </div>
-        )}
+      {product.rating !== null && (
+        <div className="flex items-center gap-1.5">
+          <RatingStars rating={product.rating} />
+          <span className="text-[13px] text-amazon-link">{product.rating.toFixed(1)}</span>
+        </div>
+      )}
 
-        <Price price={product.price} discountPercentage={product.discountPercentage} />
+      <Price price={product.price} discountPercentage={product.discountPercentage} />
 
-        <span className={outOfStock ? styles.outOfStock : styles.inStock}>
-          {outOfStock ? 'Currently unavailable' : 'In stock'}
-        </span>
+      <span className={outOfStock ? 'text-[13px] text-[#b12704]' : 'text-[13px] text-[#007600]'}>
+        {outOfStock ? 'Currently unavailable' : 'In stock'}
+      </span>
 
-        <button
-          type="button"
-          className={styles.addButton}
-          onClick={() => addItem(product)}
-          disabled={outOfStock}
-        >
-          Add to Cart
-        </button>
-      </div>
-    </article>
+      <Button
+        type="button"
+        onClick={() => addItem(product)}
+        disabled={outOfStock}
+        className="mt-2 w-full rounded-full border border-[#fcd200] bg-amazon-yellow text-amazon-ink hover:bg-amazon-yellow-hover"
+      >
+        Add to Cart
+      </Button>
+    </Card>
   );
 }
