@@ -99,4 +99,6 @@ Designed and migrated (`init` migration). Tables:
 
 - ✅ **Order history** — `GET /api/orders`; `/orders` page with order cards
   (date, total, order #, items + thumbnails), linked from the header.
-- ⬜ Auth (login/signup), wishlist, email on order placement.
+- ✅ **Wishlist** — client-side (localStorage), mirrors the cart; heart toggle on
+  cards + detail, `/wishlist` page reusing the product grid, header link + count.
+- ⬜ Auth (login/signup), email on order placement.
